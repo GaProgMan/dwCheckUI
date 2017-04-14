@@ -1,0 +1,35 @@
+<h1>Book Search</h1>
+
+<div class="row">
+    <div class="col-xs-12">
+        <input [value]="searchString" (input)="searchString = $event.target.value"/>
+        <button (click)="getDwBook()">Search</button>
+    </div>
+</div>
+
+<div class="loader" *ngIf="loading">
+    <p>Searching, please wait</p>
+</div>
+
+<div class="table-responsive" *ngIf="!loading && books">
+    <table class='table'>
+        <thead>
+            <tr>
+                <th colspan="2">Cover</th>
+                <th colspan="2">Name</th>
+                <th>ISBN 10</th>
+                <th>ISBN 13</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let book of books">
+                <td colspan="2"><img src="{{book.bookCoverImageUrl}}" class="img-responsive"/></td>
+                <td colspan="2">{{ book.bookName }}</td>
+                <td>{{ book.bookIsbn10 }}</td>
+                <td>{{ book.bookIsbn13 }}</td>
+                <td>{{ book.bookDescription }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
