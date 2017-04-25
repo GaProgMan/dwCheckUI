@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 
 @Component({
@@ -11,7 +11,7 @@ export class CharacterComponent {
 
         this.success = true;
         this.loading = false;
-        this.baseApiUrl =  'http://dwcheckapi-test.azurewebsites.net/Characters/Search?searchString=';
+        this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/Characters/Search?searchString=';
         this.registerFunctions();
     }
     // private vars

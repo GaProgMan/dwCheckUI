@@ -10,7 +10,7 @@ export class BooksComponent {
         this.http = http;
 
         this.loading = false;
-        this.baseApiUrl =  'http://dwcheckapi-test.azurewebsites.net/Books/Search?searchString=';
+        this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/Books/Search?searchString=';
         this.books = null;
         this.registerFunctions();
     }
