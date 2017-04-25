@@ -1,5 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { Http } from '@angular/http';
+import { ResultJson } from "../../models/ResultJson";
+import { Book } from "../../models/Book";
 
 @Component({
     selector: 'books',
@@ -22,7 +24,7 @@ export class BooksComponent {
     loading: boolean;
     baseApiUrl: string;
     searchString = '';
-    books: Book[];
+    books: IBook[];
 
     // public functions
     getDwBook: () => void;
@@ -32,9 +34,9 @@ export class BooksComponent {
             var route = `${this.baseApiUrl}${this.searchString}`;
             this.loading = true;
             this.http.get(route).subscribe((result) => {
-                var resultJson = result.json() as ResultJson;
+                var resultJson = result.json() as IResultJson;
                 if(resultJson.success) {
-                    this.books = new Array<Book>();
+                    this.books = new Array<IBook>();
                     result.json().result.forEach(element => {
                         this.books.push(new Book(element.bookName, element.bookIsbn10,
                                 element.bookIsbn13, element.bookDescription, 
@@ -45,36 +47,4 @@ export class BooksComponent {
             });
         }
     }
-}
-
-interface ResultJson{
-    success: boolean;
-    result: string;
-}
-
-class Book implements IBook {
-    constructor(bookName: string, bookIsbn10: string, bookIsbn13:
-                string, bookDescription: string, bookCoverImageUrl: string){
-        this.bookName = bookName;
-        this.bookIsbn10 = bookIsbn10;
-        this.bookIsbn13 = bookIsbn13;
-        this.bookDescription = bookDescription;
-        this.bookCoverImageUrl = bookCoverImageUrl;
-    }
-
-    bookName: string;
-    bookIsbn10: string;
-    bookIsbn13: string;
-    bookDescription: string;
-    bookCoverImageUrl: string;
-
-
-}
-
-interface IBook {
-    bookName: string;
-    bookIsbn10: string;
-    bookIsbn13: string;
-    bookDescription: string;
-    bookCoverImageUrl: string;
 }

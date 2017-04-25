@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cfb74a3dc8f9e7580fe5"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a5d8fe779ad8230e89ba"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,14 +706,14 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(39)(__webpack_require__.s = 39);
+/******/ 	return hotCreateRequire(41)(__webpack_require__.s = 41);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports) {
 
-module.exports = vendor_9e1f6cfdc9b31917f438;
+module.exports = vendor_3ca32c7e51753c18a6fa;
 
 /***/ }),
 /* 1 */
@@ -983,7 +983,7 @@ module.exports = (__webpack_require__(0))(194);
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(0))(334);
+module.exports = (__webpack_require__(0))(335);
 
 /***/ }),
 /* 6 */
@@ -992,11 +992,11 @@ module.exports = (__webpack_require__(0))(334);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(36);
+__webpack_require__(38);
 var core_1 = __webpack_require__(1);
 var angular2_universal_1 = __webpack_require__(5);
 var app_module_1 = __webpack_require__(11);
-__webpack_require__(37);
+__webpack_require__(39);
 var rootElemTagName = 'app'; // Update this if you change your root component selector
 // Enable either Hot Module Reloading or production mode
 if (true) {
@@ -1040,7 +1040,7 @@ var options = {
   name: ''
 };
 if (true) {
-  var querystring = __webpack_require__(29);
+  var querystring = __webpack_require__(31);
   var overrides = querystring.parse(__resourceQuery.slice(1));
   if (overrides.path) options.path = overrides.path;
   if (overrides.timeout) options.timeout = overrides.timeout;
@@ -1160,11 +1160,11 @@ if (typeof window !== 'undefined') {
 }
 
 function createReporter() {
-  var strip = __webpack_require__(30);
+  var strip = __webpack_require__(32);
 
   var overlay;
   if (typeof document !== 'undefined' && options.overlay) {
-    overlay = __webpack_require__(33);
+    overlay = __webpack_require__(35);
   }
 
   var styles = {
@@ -1217,7 +1217,7 @@ function createReporter() {
   };
 }
 
-var processUpdate = __webpack_require__(34);
+var processUpdate = __webpack_require__(36);
 
 var customHandler;
 var subscribeAllHandler;
@@ -1282,13 +1282,13 @@ if (module) {
   };
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, "?path=%2F__webpack_hmr", __webpack_require__(38)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, "?path=%2F__webpack_hmr", __webpack_require__(40)(module)))
 
 /***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(0))(336);
+module.exports = (__webpack_require__(0))(337);
 
 /***/ }),
 /* 9 */
@@ -1498,7 +1498,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__(1);
-var router_1 = __webpack_require__(35);
+var router_1 = __webpack_require__(37);
 var angular2_universal_1 = __webpack_require__(5);
 var app_component_1 = __webpack_require__(13);
 var navmenu_component_1 = __webpack_require__(16);
@@ -1557,7 +1557,7 @@ var AboutComponent = (function () {
 AboutComponent = __decorate([
     core_1.Component({
         selector: 'about',
-        template: __webpack_require__(22)
+        template: __webpack_require__(24)
     })
 ], AboutComponent);
 exports.AboutComponent = AboutComponent;
@@ -1585,8 +1585,8 @@ var AppComponent = (function () {
 AppComponent = __decorate([
     core_1.Component({
         selector: 'app',
-        template: __webpack_require__(23),
-        styles: [__webpack_require__(31)]
+        template: __webpack_require__(25),
+        styles: [__webpack_require__(33)]
     })
 ], AppComponent);
 exports.AppComponent = AppComponent;
@@ -1610,6 +1610,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__(1);
 var http_1 = __webpack_require__(4);
+var Book_1 = __webpack_require__(17);
 var BooksComponent = (function () {
     function BooksComponent(http) {
         this.searchString = '';
@@ -1629,7 +1630,7 @@ var BooksComponent = (function () {
                 if (resultJson.success) {
                     _this.books = new Array();
                     result.json().result.forEach(function (element) {
-                        _this.books.push(new Book(element.bookName, element.bookIsbn10, element.bookIsbn13, element.bookDescription, element.bookCoverImageUrl));
+                        _this.books.push(new Book_1.Book(element.bookName, element.bookIsbn10, element.bookIsbn13, element.bookDescription, element.bookCoverImageUrl));
                     });
                 }
                 _this.loading = false;
@@ -1641,21 +1642,11 @@ var BooksComponent = (function () {
 BooksComponent = __decorate([
     core_1.Component({
         selector: 'books',
-        template: __webpack_require__(24)
+        template: __webpack_require__(26)
     }),
     __metadata("design:paramtypes", [http_1.Http])
 ], BooksComponent);
 exports.BooksComponent = BooksComponent;
-var Book = (function () {
-    function Book(bookName, bookIsbn10, bookIsbn13, bookDescription, bookCoverImageUrl) {
-        this.bookName = bookName;
-        this.bookIsbn10 = bookIsbn10;
-        this.bookIsbn13 = bookIsbn13;
-        this.bookDescription = bookDescription;
-        this.bookCoverImageUrl = bookCoverImageUrl;
-    }
-    return Book;
-}());
 
 
 /***/ }),
@@ -1676,6 +1667,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__(1);
 var http_1 = __webpack_require__(4);
+var Character_1 = __webpack_require__(18);
 var CharacterComponent = (function () {
     function CharacterComponent(http) {
         this.searchString = '';
@@ -1696,7 +1688,7 @@ var CharacterComponent = (function () {
                     _this.success = true;
                     _this.characters = new Array();
                     result.json().result.forEach(function (element) {
-                        _this.characters.push(new Character(element.characterName, element.books));
+                        _this.characters.push(new Character_1.Character(element.characterName, element.books));
                     });
                 }
             });
@@ -1707,21 +1699,11 @@ var CharacterComponent = (function () {
 CharacterComponent = __decorate([
     core_1.Component({
         selector: 'characters',
-        template: __webpack_require__(25)
+        template: __webpack_require__(27)
     }),
     __metadata("design:paramtypes", [http_1.Http])
 ], CharacterComponent);
 exports.CharacterComponent = CharacterComponent;
-var Character = (function () {
-    function Character(characterName, books) {
-        this.characterName = characterName;
-        this.books = books;
-        this.booksAsString = function () {
-            return books.map(function (b) { return b; }).join(', ');
-        };
-    }
-    return Character;
-}());
 
 
 /***/ }),
@@ -1746,8 +1728,8 @@ var NavMenuComponent = (function () {
 NavMenuComponent = __decorate([
     core_1.Component({
         selector: 'nav-menu',
-        template: __webpack_require__(26),
-        styles: [__webpack_require__(32)]
+        template: __webpack_require__(28),
+        styles: [__webpack_require__(34)]
     })
 ], NavMenuComponent);
 exports.NavMenuComponent = NavMenuComponent;
@@ -1755,6 +1737,46 @@ exports.NavMenuComponent = NavMenuComponent;
 
 /***/ }),
 /* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Book = (function () {
+    function Book(bookName, bookIsbn10, bookIsbn13, bookDescription, bookCoverImageUrl) {
+        this.bookName = bookName;
+        this.bookIsbn10 = bookIsbn10;
+        this.bookIsbn13 = bookIsbn13;
+        this.bookDescription = bookDescription;
+        this.bookCoverImageUrl = bookCoverImageUrl;
+    }
+    return Book;
+}());
+exports.Book = Book;
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Character = (function () {
+    function Character(characterName, books) {
+        this.characterName = characterName;
+        this.books = books;
+        this.booksAsString = function () {
+            return books.map(function (b) { return b; }).join(', ');
+        };
+    }
+    return Character;
+}());
+exports.Character = Character;
+
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -1768,7 +1790,7 @@ exports.push([module.i, "@media (max-width: 767px) {\r\n    /* On small screens,
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -1782,19 +1804,19 @@ exports.push([module.i, "li .glyphicon {\r\n    margin-right: 10px;\r\n}\r\n\r\n
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-  XmlEntities: __webpack_require__(21),
-  Html4Entities: __webpack_require__(20),
+  XmlEntities: __webpack_require__(23),
+  Html4Entities: __webpack_require__(22),
   Html5Entities: __webpack_require__(3),
   AllHtmlEntities: __webpack_require__(3)
 };
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports) {
 
 var HTML_ALPHA = ['apos', 'nbsp', 'iexcl', 'cent', 'pound', 'curren', 'yen', 'brvbar', 'sect', 'uml', 'copy', 'ordf', 'laquo', 'not', 'shy', 'reg', 'macr', 'deg', 'plusmn', 'sup2', 'sup3', 'acute', 'micro', 'para', 'middot', 'cedil', 'sup1', 'ordm', 'raquo', 'frac14', 'frac12', 'frac34', 'iquest', 'Agrave', 'Aacute', 'Acirc', 'Atilde', 'Auml', 'Aring', 'Aelig', 'Ccedil', 'Egrave', 'Eacute', 'Ecirc', 'Euml', 'Igrave', 'Iacute', 'Icirc', 'Iuml', 'ETH', 'Ntilde', 'Ograve', 'Oacute', 'Ocirc', 'Otilde', 'Ouml', 'times', 'Oslash', 'Ugrave', 'Uacute', 'Ucirc', 'Uuml', 'Yacute', 'THORN', 'szlig', 'agrave', 'aacute', 'acirc', 'atilde', 'auml', 'aring', 'aelig', 'ccedil', 'egrave', 'eacute', 'ecirc', 'euml', 'igrave', 'iacute', 'icirc', 'iuml', 'eth', 'ntilde', 'ograve', 'oacute', 'ocirc', 'otilde', 'ouml', 'divide', 'Oslash', 'ugrave', 'uacute', 'ucirc', 'uuml', 'yacute', 'thorn', 'yuml', 'quot', 'amp', 'lt', 'gt', 'oelig', 'oelig', 'scaron', 'scaron', 'yuml', 'circ', 'tilde', 'ensp', 'emsp', 'thinsp', 'zwnj', 'zwj', 'lrm', 'rlm', 'ndash', 'mdash', 'lsquo', 'rsquo', 'sbquo', 'ldquo', 'rdquo', 'bdquo', 'dagger', 'dagger', 'permil', 'lsaquo', 'rsaquo', 'euro', 'fnof', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigmaf', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega', 'thetasym', 'upsih', 'piv', 'bull', 'hellip', 'prime', 'prime', 'oline', 'frasl', 'weierp', 'image', 'real', 'trade', 'alefsym', 'larr', 'uarr', 'rarr', 'darr', 'harr', 'crarr', 'larr', 'uarr', 'rarr', 'darr', 'harr', 'forall', 'part', 'exist', 'empty', 'nabla', 'isin', 'notin', 'ni', 'prod', 'sum', 'minus', 'lowast', 'radic', 'prop', 'infin', 'ang', 'and', 'or', 'cap', 'cup', 'int', 'there4', 'sim', 'cong', 'asymp', 'ne', 'equiv', 'le', 'ge', 'sub', 'sup', 'nsub', 'sube', 'supe', 'oplus', 'otimes', 'perp', 'sdot', 'lceil', 'rceil', 'lfloor', 'rfloor', 'lang', 'rang', 'loz', 'spades', 'clubs', 'hearts', 'diams'];
@@ -1947,7 +1969,7 @@ module.exports = Html4Entities;
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports) {
 
 var ALPHA_INDEX = {
@@ -2108,37 +2130,37 @@ module.exports = XmlEntities;
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = "<h1>Discworld Disorganiser</h1>\n\n<div class=\"row\">\n    <div class=\"col-xs-12\">\n        <p>Welcome to the Discworld Disorganiser.</p>\n        <p>This application is designed to be a book and character search engine interface for the Discworld series of books.</p>\n        <p>To use this application, click on either 'Books' or 'Characters', these will take you to a search screen where you can search for a book or character within the Discworld series</p>\n    </div>\n</div>\n\n<h3>Technology Used</h3>\n<div class='row'>\n    <div class='col-xs-12'>\n        <p>This application runs on .NET Core and Angular2, with TypeScript compiled client-side scripting</p>\n        <p>The search functionality is provided by my dwCheckApi project. The source code for dwCheckApi can be found <a href=\"https://github.com/GaProgMan/dwCheckApi\" target=\"_blank\">here</a></p>\n    </div>\n</div>";
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = "<div class='container-fluid'>\r\n    <div class='row'>\r\n        <div class='col-sm-3'>\r\n            <nav-menu></nav-menu>\r\n        </div>\r\n        <div class='col-sm-9 body-content'>\r\n            <router-outlet></router-outlet>\r\n        </div>\r\n    </div>\r\n</div>";
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = "<h1>Book Search</h1>\r\n\r\n<div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\"/>\r\n        <button (click)=\"getDwBook()\">Search</button>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"loader\" *ngIf=\"loading\">\r\n    <p>Searching, please wait</p>\r\n</div>\r\n\r\n<div class=\"table-responsive\" *ngIf=\"!loading && books\">\r\n    <table class='table'>\r\n        <thead>\r\n            <tr>\r\n                <th colspan=\"2\">Cover</th>\r\n                <th colspan=\"2\">Name</th>\r\n                <th>ISBN 10</th>\r\n                <th>ISBN 13</th>\r\n                <th>Description</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let book of books\">\r\n                <td colspan=\"2\"><img src=\"{{book.bookCoverImageUrl}}\" class=\"img-responsive\"/></td>\r\n                <td colspan=\"2\">{{ book.bookName }}</td>\r\n                <td>{{ book.bookIsbn10 }}</td>\r\n                <td>{{ book.bookIsbn13 }}</td>\r\n                <td>{{ book.bookDescription }}</td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>";
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = "<h1>Character Search</h1>\r\n\r\n<div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\"/>\r\n        <button (click)=\"getDwCharacter()\">Search</button>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"loader\" *ngIf=\"!success\">\r\n    <p>Could not find any results</p>\r\n</div>\r\n\r\n<div class=\"table-responsive\" *ngIf=\"success\">\r\n    <table class='table' *ngIf=\"characters\">\r\n        <thead>\r\n            <tr>\r\n                <th colspan=\"2\">Name</th>\r\n                <th>Books</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let char of characters\">\r\n                <td colspan=\"2\">{{ char.characterName }}</td>\r\n                <td>{{ char.booksAsString() }}</td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>";
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = "<div class='main-nav'>\r\n    <div class='navbar navbar-inverse'>\r\n        <div class='navbar-header'>\r\n            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>\r\n                <span class='sr-only'>Toggle navigation</span>\r\n                <span class='icon-bar'></span>\r\n                <span class='icon-bar'></span>\r\n                <span class='icon-bar'></span>\r\n            </button>\r\n            <a class='navbar-brand' [routerLink]=\"['/about']\">dwCheckUi</a>\r\n        </div>\r\n        <div class='clearfix'></div>\r\n        <div class='navbar-collapse collapse'>\r\n            <ul class='nav navbar-nav'>\r\n                <li [routerLinkActive]=\"['link-active']\">\r\n                    <a [routerLink]=\"['/books']\">\r\n                        <span class='glyphicon glyphicon-book'></span> Books\r\n                    </a>\r\n                </li>\r\n                <li [routerLinkActive]=\"['link-active']\">\r\n                    <a [routerLink]=\"['/characters']\">\r\n                        <span class='glyphicon glyphicon-user'></span> Characters\r\n                    </a>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n    </div>\r\n</div>\r\n";
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2229,7 +2251,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2321,18 +2343,18 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(27);
-exports.encode = exports.stringify = __webpack_require__(28);
+exports.decode = exports.parse = __webpack_require__(29);
+exports.encode = exports.stringify = __webpack_require__(30);
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2345,35 +2367,35 @@ module.exports = function (str) {
 
 
 /***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-        var result = __webpack_require__(17);
-
-        if (typeof result === "string") {
-            module.exports = result;
-        } else {
-            module.exports = result.toString();
-        }
-    
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-        var result = __webpack_require__(18);
-
-        if (typeof result === "string") {
-            module.exports = result;
-        } else {
-            module.exports = result.toString();
-        }
-    
-
-/***/ }),
 /* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+        var result = __webpack_require__(19);
+
+        if (typeof result === "string") {
+            module.exports = result;
+        } else {
+            module.exports = result.toString();
+        }
+    
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+        var result = __webpack_require__(20);
+
+        if (typeof result === "string") {
+            module.exports = result;
+        } else {
+            module.exports = result.toString();
+        }
+    
+
+/***/ }),
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*eslint-env browser*/
@@ -2417,7 +2439,7 @@ var colors = {
 };
 ansiHTML.setColors(colors);
 
-var Entities = __webpack_require__(19).AllHtmlEntities;
+var Entities = __webpack_require__(21).AllHtmlEntities;
 var entities = new Entities();
 
 exports.showProblems =
@@ -2458,7 +2480,7 @@ function problemType (type) {
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2596,31 +2618,31 @@ module.exports = function(hash, moduleMap, options) {
 
 
 /***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(0))(332);
-
-/***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(0))(333);
 
 /***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(0))(335);
-
-/***/ }),
 /* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(0))(574);
+module.exports = (__webpack_require__(0))(334);
 
 /***/ }),
 /* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = (__webpack_require__(0))(336);
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = (__webpack_require__(0))(576);
+
+/***/ }),
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(8);

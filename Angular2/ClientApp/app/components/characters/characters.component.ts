@@ -1,5 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { Http } from '@angular/http';
+import { ResultJson } from "../../models/ResultJson";
+import { Character } from "../../models/Character";
 
 @Component({
     selector: 'characters',
@@ -32,7 +34,7 @@ export class CharacterComponent {
             this.success = false;
             var route = `${this.baseApiUrl}${this.searchString}`;
             this.http.get(route).subscribe((result) => {
-                var resultJson = result.json() as ResultJson;
+                var resultJson = result.json() as IResultJson;
                 if(resultJson.success) {
                     this.success = true;
                     this.characters = new Array<ICharacter>();
@@ -43,32 +45,4 @@ export class CharacterComponent {
             });
         }
     }
-}
-
-interface ResultJson{
-    success: boolean;
-    result: string;
-}
-
-class Character implements ICharacter {
-    constructor(characterName: string, books: string[]){
-        this.characterName = characterName;
-        this.books = books;
-
-        this.booksAsString = (): string =>{
-            return books.map(b => b).join(', ');
-        }
-    }
-    characterName: string;
-    books: string[];
-    booksAsString: () => string;
-
-
-}
-
-interface ICharacter {
-    characterName: string;
-    books: string[];
-
-    booksAsString:() => string;
 }

@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 152);
+/******/ 	return __webpack_require__(__webpack_require__.s = 147);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -72,7 +72,7 @@ module.exports =
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * @license Angular v2.4.9
+ * @license Angular v2.4.10
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -1190,7 +1190,7 @@ module.exports =
     /**
      * @stable
      */
-    var /** @type {?} */ VERSION = new Version('2.4.9');
+    var /** @type {?} */ VERSION = new Version('2.4.10');
 
     /**
      * Allows to refer to references which are not yet defined.
@@ -12935,7 +12935,10 @@ var Observable = (function () {
             throw new Error('no Promise impl found');
         }
         return new PromiseCtor(function (resolve, reject) {
-            var subscription = _this.subscribe(function (value) {
+            // Must be declared in a separate statement to avoid a RefernceError when
+            // accessing subscription below in the closure due to Temporal Dead Zone.
+            var subscription;
+            subscription = _this.subscribe(function (value) {
                 if (subscription) {
                     // if there is a subscription, then we can surmise
                     // the next handling is asynchronous. Any errors thrown
@@ -12969,7 +12972,7 @@ var Observable = (function () {
      * @method Symbol.observable
      * @return {Observable} this instance of the observable
      */
-    Observable.prototype[observable_1.$$observable] = function () {
+    Observable.prototype[observable_1.observable] = function () {
         return this;
     };
     // HACK: Since TypeScript inherits static properties too, we have to
@@ -22878,7 +22881,7 @@ var Subscriber = (function (_super) {
                 break;
         }
     }
-    Subscriber.prototype[rxSubscriber_1.$$rxSubscriber] = function () { return this; };
+    Subscriber.prototype[rxSubscriber_1.rxSubscriber] = function () { return this; };
     /**
      * A static factory for a Subscriber, given a (potentially partial) definition
      * of an Observer.
@@ -22980,14 +22983,16 @@ var SafeSubscriber = (function (_super) {
             next = observerOrNext;
         }
         else if (observerOrNext) {
-            context = observerOrNext;
             next = observerOrNext.next;
             error = observerOrNext.error;
             complete = observerOrNext.complete;
-            if (isFunction_1.isFunction(context.unsubscribe)) {
-                this.add(context.unsubscribe.bind(context));
+            if (observerOrNext !== Observer_1.empty) {
+                context = Object.create(observerOrNext);
+                if (isFunction_1.isFunction(context.unsubscribe)) {
+                    this.add(context.unsubscribe.bind(context));
+                }
+                context.unsubscribe = this.unsubscribe.bind(this);
             }
-            context.unsubscribe = this.unsubscribe.bind(this);
         }
         this._context = context;
         this._next = next;
@@ -23082,7 +23087,7 @@ var SafeSubscriber = (function (_super) {
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * @license Angular v2.4.9
+ * @license Angular v2.4.10
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -27755,7 +27760,7 @@ var SafeSubscriber = (function (_super) {
     /**
      * @stable
      */
-    var /** @type {?} */ VERSION = new core.Version('2.4.9');
+    var /** @type {?} */ VERSION = new core.Version('2.4.10');
 
     exports.BrowserModule = BrowserModule;
     exports.platformBrowser = platformBrowser;
@@ -27781,7 +27786,7 @@ var SafeSubscriber = (function (_super) {
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * @license Angular v2.4.9
+ * @license Angular v2.4.10
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -27890,6 +27895,11 @@ var SafeSubscriber = (function (_super) {
         PlatformLocation.prototype.back = function () { };
         return PlatformLocation;
     }());
+    /**
+     * @whatItDoes indicates when a location is initialized
+     * @experimental
+     */
+    var /** @type {?} */ LOCATION_INITIALIZED = new _angular_core.OpaqueToken('Location Initialized');
 
     /**
      * `LocationStrategy` is responsible for representing and reading route state
@@ -31416,7 +31426,7 @@ var SafeSubscriber = (function (_super) {
     /**
      * @stable
      */
-    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.9');
+    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.10');
 
     exports.NgLocalization = NgLocalization;
     exports.CommonModule = CommonModule;
@@ -31444,6 +31454,7 @@ var SafeSubscriber = (function (_super) {
     exports.VERSION = VERSION;
     exports.Version = _angular_core.Version;
     exports.PlatformLocation = PlatformLocation;
+    exports.LOCATION_INITIALIZED = LOCATION_INITIALIZED;
     exports.LocationStrategy = LocationStrategy;
     exports.APP_BASE_HREF = APP_BASE_HREF;
     exports.HashLocationStrategy = HashLocationStrategy;
@@ -31749,7 +31760,7 @@ SPECIAL_ELEMENTS[NS.SVG][$.DESC] = true;
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * @license Angular v2.4.9
+ * @license Angular v2.4.10
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -31762,7 +31773,7 @@ SPECIAL_ELEMENTS[NS.SVG][$.DESC] = true;
     /**
      * @stable
      */
-    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.9');
+    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.10');
 
     /**
      * @license
@@ -39641,39 +39652,30 @@ SPECIAL_ELEMENTS[NS.SVG][$.DESC] = true;
     function utf8Encode(str) {
         var /** @type {?} */ encoded = '';
         for (var /** @type {?} */ index = 0; index < str.length; index++) {
-            var /** @type {?} */ codePoint = decodeSurrogatePairs(str, index);
+            var /** @type {?} */ codePoint = str.charCodeAt(index);
+            // decode surrogate
+            // see https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+            if (codePoint >= 0xd800 && codePoint <= 0xdbff && str.length > (index + 1)) {
+                var /** @type {?} */ low = str.charCodeAt(index + 1);
+                if (low >= 0xdc00 && low <= 0xdfff) {
+                    index++;
+                    codePoint = ((codePoint - 0xd800) << 10) + low - 0xdc00 + 0x10000;
+                }
+            }
             if (codePoint <= 0x7f) {
                 encoded += String.fromCharCode(codePoint);
             }
             else if (codePoint <= 0x7ff) {
-                encoded += String.fromCharCode(0xc0 | codePoint >>> 6, 0x80 | codePoint & 0x3f);
+                encoded += String.fromCharCode(((codePoint >> 6) & 0x1F) | 0xc0, (codePoint & 0x3f) | 0x80);
             }
             else if (codePoint <= 0xffff) {
-                encoded += String.fromCharCode(0xe0 | codePoint >>> 12, 0x80 | codePoint >>> 6 & 0x3f, 0x80 | codePoint & 0x3f);
+                encoded += String.fromCharCode((codePoint >> 12) | 0xe0, ((codePoint >> 6) & 0x3f) | 0x80, (codePoint & 0x3f) | 0x80);
             }
             else if (codePoint <= 0x1fffff) {
-                encoded += String.fromCharCode(0xf0 | codePoint >>> 18, 0x80 | codePoint >>> 12 & 0x3f, 0x80 | codePoint >>> 6 & 0x3f, 0x80 | codePoint & 0x3f);
+                encoded += String.fromCharCode(((codePoint >> 18) & 0x07) | 0xf0, ((codePoint >> 12) & 0x3f) | 0x80, ((codePoint >> 6) & 0x3f) | 0x80, (codePoint & 0x3f) | 0x80);
             }
         }
         return encoded;
-    }
-    /**
-     * @param {?} str
-     * @param {?} index
-     * @return {?}
-     */
-    function decodeSurrogatePairs(str, index) {
-        if (index < 0 || index >= str.length) {
-            throw new Error("index=" + index + " is out of range in \"" + str + "\"");
-        }
-        var /** @type {?} */ high = str.charCodeAt(index);
-        if (high >= 0xd800 && high <= 0xdfff && str.length > index + 1) {
-            var /** @type {?} */ low = byteAt(str, index + 1);
-            if (low >= 0xdc00 && low <= 0xdfff) {
-                return (high - 0xd800) * 0x400 + low - 0xdc00 + 0x10000;
-            }
-        }
-        return high;
     }
     /**
      * @param {?} a
@@ -62359,7 +62361,11 @@ function getSymbolObservable(context) {
     return $$observable;
 }
 exports.getSymbolObservable = getSymbolObservable;
-exports.$$observable = getSymbolObservable(root_1.root);
+exports.observable = getSymbolObservable(root_1.root);
+/**
+ * @deprecated use observable instead
+ */
+exports.$$observable = exports.observable;
 //# sourceMappingURL=observable.js.map
 
 /***/ }),
@@ -62379,7 +62385,7 @@ module.exports = require("util");
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * @license Angular v2.4.9
+ * @license Angular v2.4.10
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -64399,7 +64405,7 @@ module.exports = require("util");
     /**
      * @stable
      */
-    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.9');
+    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.10');
 
     exports.BrowserXhr = BrowserXhr;
     exports.JSONPBackend = JSONPBackend;
@@ -64563,6 +64569,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
     The options are (default in brackets):
         indent_size (4)                         — indentation size,
         indent_char (space)                     — character to indent with,
+        preserve_newlines (default false)       - whether existing line breaks should be preserved,
         selector_separator_newline (true)       - separate selectors with newline or
                                                   not (e.g. "a,\nbr" or "a, br")
         end_with_newline (false)                - end with a newline
@@ -64618,8 +64625,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
 
         source_text = source_text || '';
 
+        var newlinesFromLastWSEat = 0;
         var indentSize = options.indent_size ? parseInt(options.indent_size, 10) : 4;
         var indentCharacter = options.indent_char || ' ';
+        var preserve_newlines = (options.preserve_newlines === undefined) ? false : options.preserve_newlines;
         var selectorSeparatorNewline = (options.selector_separator_newline === undefined) ? true : options.selector_separator_newline;
         var end_with_newline = (options.end_with_newline === undefined) ? false : options.end_with_newline;
         var newline_between_rules = (options.newline_between_rules === undefined) ? true : options.newline_between_rules;
@@ -64690,12 +64699,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
             return str;
         }
 
-        function eatWhitespace() {
-            var result = '';
+        function eatWhitespace(preserve_newlines_local) {
+            var result = 0;
             while (whiteRe.test(peek())) {
                 next();
-                result += ch;
+                if (ch === '\n' && preserve_newlines_local && preserve_newlines) {
+                    print.newLine(true);
+                    result++;
+                }
             }
+            newlinesFromLastWSEat = result;
             return result;
         }
 
@@ -64776,12 +64789,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
         print["{"] = function(ch) {
             print.singleSpace();
             output.push(ch);
-            print.newLine();
+            if (!eatWhitespace(true)) {
+                print.newLine();
+            }
         };
-        print["}"] = function(ch) {
-            print.newLine();
-            output.push(ch);
-            print.newLine();
+        print["}"] = function(newline) {
+            if (newline) {
+                print.newLine();
+            }
+            output.push('}');
+            if (!eatWhitespace(true)) {
+                print.newLine();
+            }
         };
 
         print._lastCharWhitespace = function() {
@@ -64792,8 +64811,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
             if (output.length) {
                 if (!keepWhitespace && output[output.length - 1] !== '\n') {
                     print.trim();
+                } else if (output[output.length - 1] === basebaseIndentString) {
+                    output.pop();
                 }
-
                 output.push('\n');
 
                 if (basebaseIndentString) {
@@ -64895,9 +64915,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
                     eatWhitespace();
                     next();
                     print.singleSpace();
-                    output.push("{}");
-                    print.newLine();
-                    if (newline_between_rules && indentLevel === 0) {
+                    output.push("{");
+                    print['}'](false);
+                    if (newlinesFromLastWSEat < 2 && newline_between_rules && indentLevel === 0) {
                         print.newLine(true);
                     }
                 } else {
@@ -64914,13 +64934,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
                 }
             } else if (ch === '}') {
                 outdent();
-                print["}"](ch);
+                print["}"](true);
                 insideRule = false;
                 insidePropertyValue = false;
                 if (nestedLevel) {
                     nestedLevel--;
                 }
-                if (newline_between_rules && indentLevel === 0) {
+                if (newlinesFromLastWSEat < 2 && newline_between_rules && indentLevel === 0) {
                     print.newLine(true);
                 }
             } else if (ch === ":") {
@@ -64958,7 +64978,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
             } else if (ch === ';') {
                 insidePropertyValue = false;
                 output.push(ch);
-                print.newLine();
+                if (!eatWhitespace(true)) {
+                    print.newLine();
+                }
             } else if (ch === '(') { // may be a url
                 if (lookBack("url")) {
                     output.push(ch);
@@ -64981,8 +65003,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
                 parenLevel--;
             } else if (ch === ',') {
                 output.push(ch);
-                eatWhitespace();
-                if (selectorSeparatorNewline && !insidePropertyValue && parenLevel < 1) {
+                if (!eatWhitespace(true) && selectorSeparatorNewline && !insidePropertyValue && parenLevel < 1) {
                     print.newLine();
                 } else {
                     print.singleSpace();
@@ -65009,8 +65030,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:t
                 output.push(ch);
             } else if (ch === '=') { // no whitespace before or after
                 eatWhitespace();
-                ch = '=';
-                output.push(ch);
+                output.push('=');
+                if (whiteRe.test(ch)) {
+                    ch = '';
+                }
             } else {
                 print.preserveSingleSpace();
                 output.push(ch);
@@ -68505,7 +68528,7 @@ var Subject = (function (_super) {
         this.hasError = false;
         this.thrownError = null;
     }
-    Subject.prototype[rxSubscriber_1.$$rxSubscriber] = function () {
+    Subject.prototype[rxSubscriber_1.rxSubscriber] = function () {
         return new SubjectSubscriber(this);
     };
     Subject.prototype.lift = function (operator) {
@@ -68873,7 +68896,11 @@ function symbolIteratorPonyfill(root) {
     }
 }
 exports.symbolIteratorPonyfill = symbolIteratorPonyfill;
-exports.$$iterator = symbolIteratorPonyfill(root_1.root);
+exports.iterator = symbolIteratorPonyfill(root_1.root);
+/**
+ * @deprecated use iterator instead
+ */
+exports.$$iterator = exports.iterator;
 //# sourceMappingURL=iterator.js.map
 
 /***/ }),
@@ -68884,8 +68911,12 @@ exports.$$iterator = symbolIteratorPonyfill(root_1.root);
 
 var root_1 = __webpack_require__(6);
 var Symbol = root_1.root.Symbol;
-exports.$$rxSubscriber = (typeof Symbol === 'function' && typeof Symbol.for === 'function') ?
+exports.rxSubscriber = (typeof Symbol === 'function' && typeof Symbol.for === 'function') ?
     Symbol.for('rxSubscriber') : '@@rxSubscriber';
+/**
+ * @deprecated use rxSubscriber instead
+ */
+exports.$$rxSubscriber = exports.rxSubscriber;
 //# sourceMappingURL=rxSubscriber.js.map
 
 /***/ }),
@@ -68972,8 +69003,8 @@ function subscribeToResult(outerSubscriber, result, outerValue, outerIndex) {
         });
         return destination;
     }
-    else if (result && typeof result[iterator_1.$$iterator] === 'function') {
-        var iterator = result[iterator_1.$$iterator]();
+    else if (result && typeof result[iterator_1.iterator] === 'function') {
+        var iterator = result[iterator_1.iterator]();
         do {
             var item = iterator.next();
             if (item.done) {
@@ -68986,8 +69017,8 @@ function subscribeToResult(outerSubscriber, result, outerValue, outerIndex) {
             }
         } while (true);
     }
-    else if (result && typeof result[observable_1.$$observable] === 'function') {
-        var obs = result[observable_1.$$observable]();
+    else if (result && typeof result[observable_1.observable] === 'function') {
+        var obs = result[observable_1.observable]();
         if (typeof obs.subscribe !== 'function') {
             destination.error(new TypeError('Provided object does not correctly implement Symbol.observable'));
         }
@@ -69153,7 +69184,7 @@ var require;var __WEBPACK_AMD_DEFINE_RESULT__;/*!
     function lib$es6$promise$asap$$attemptVertx() {
       try {
         var r = require;
-        var vertx = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"vertx\""); e.code = 'MODULE_NOT_FOUND';; throw e; }()));
+        var vertx = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"vertx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
         lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
         return lib$es6$promise$asap$$useVertxTimer();
       } catch(e) {
@@ -75465,7 +75496,7 @@ function patchEventEmitterMethods(obj) {
 // EventEmitter
 var events;
 try {
-    events = __webpack_require__(147);
+    events = __webpack_require__(148);
 }
 catch (err) {
 }
@@ -75598,7 +75629,7 @@ var set = 'set';
 var clear = 'clear';
 var _global = typeof window === 'object' && window || typeof self === 'object' && self || global;
 // Timers
-var timers = __webpack_require__(151);
+var timers = __webpack_require__(152);
 patchTimer(timers, set, clear, 'Timeout');
 patchTimer(timers, set, clear, 'Interval');
 patchTimer(timers, set, clear, 'Immediate');
@@ -75680,7 +75711,6 @@ webpackEmptyContext.keys = function() { return []; };
 webpackEmptyContext.resolve = webpackEmptyContext;
 module.exports = webpackEmptyContext;
 webpackEmptyContext.id = 38;
-
 
 /***/ }),
 /* 39 */
@@ -81208,7 +81238,7 @@ module.exports = require("fs");
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * @license Angular v2.4.9
+ * @license Angular v2.4.10
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -81358,7 +81388,7 @@ module.exports = require("fs");
     /**
      * @stable
      */
-    var VERSION = new _angular_core.Version('2.4.9');
+    var VERSION = new _angular_core.Version('2.4.10');
 
     /**
      * @experimental
@@ -81381,7 +81411,7 @@ module.exports = require("fs");
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * @license Angular v2.4.9
+ * @license Angular v2.4.10
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -83357,7 +83387,7 @@ module.exports = require("fs");
     /**
      * @stable
      */
-    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.9');
+    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.10');
 
     exports.ServerModule = ServerModule;
     exports.platformDynamicServer = platformDynamicServer;
@@ -83372,7 +83402,7 @@ module.exports = require("fs");
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * @license Angular v3.4.9
+ * @license Angular v3.4.10
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */(function (global, factory) {
@@ -86679,6 +86709,14 @@ module.exports = require("fs");
         throw error;
     }
     /**
+     * \@internal
+     * @param {?} snapshot
+     * @return {?}
+     */
+    function defaultRouterHook(snapshot) {
+        return rxjs_observable_of.of(null);
+    }
+    /**
      * Does not detach any subtrees. Reuses routes as long as their route config is the same.
      */
     var DefaultRouteReuseStrategy = (function () {
@@ -86757,6 +86795,16 @@ module.exports = require("fs");
             this.navigated = false;
             /**
              * Extracts and merges URLs. Used for Angular 1 to Angular 2 migrations.
+             * Used by RouterModule. This allows us to
+             * pause the navigation either before preactivation or after it.
+             * @internal
+             */
+            this.hooks = {
+                beforePreactivation: defaultRouterHook,
+                afterPreactivation: defaultRouterHook
+            };
+            /**
+             * Extracts and merges URLs. Used for AngularJS to Angular migrations.
              */
             this.urlHandlingStrategy = new DefaultUrlHandlingStrategy();
             this.routeReuseStrategy = new DefaultRouteReuseStrategy();
@@ -87133,16 +87181,19 @@ module.exports = require("fs");
                 else {
                     urlAndSnapshot$ = rxjs_observable_of.of({ appliedUrl: url, snapshot: precreatedState });
                 }
+                var /** @type {?} */ beforePreactivationDone$ = rxjs_operator_mergeMap.mergeMap.call(urlAndSnapshot$, function (p) {
+                    return rxjs_operator_map.map.call(_this.hooks.beforePreactivation(p.snapshot), function () { return p; });
+                });
                 // run preactivation: guards and data resolvers
                 var /** @type {?} */ preActivation;
-                var /** @type {?} */ preactivationTraverse$ = rxjs_operator_map.map.call(urlAndSnapshot$, function (_a) {
+                var /** @type {?} */ preactivationTraverse$ = rxjs_operator_map.map.call(beforePreactivationDone$, function (_a) {
                     var appliedUrl = _a.appliedUrl, snapshot = _a.snapshot;
                     preActivation =
                         new PreActivation(snapshot, _this.currentRouterState.snapshot, _this.injector);
                     preActivation.traverse(_this.outletMap);
                     return { appliedUrl: appliedUrl, snapshot: snapshot };
                 });
-                var /** @type {?} */ preactivationCheckGuards = rxjs_operator_mergeMap.mergeMap.call(preactivationTraverse$, function (_a) {
+                var /** @type {?} */ preactivationCheckGuards$ = rxjs_operator_mergeMap.mergeMap.call(preactivationTraverse$, function (_a) {
                     var appliedUrl = _a.appliedUrl, snapshot = _a.snapshot;
                     if (_this.navigationId !== id)
                         return rxjs_observable_of.of(false);
@@ -87150,7 +87201,7 @@ module.exports = require("fs");
                         return { appliedUrl: appliedUrl, snapshot: snapshot, shouldActivate: shouldActivate };
                     });
                 });
-                var /** @type {?} */ preactivationResolveData$ = rxjs_operator_mergeMap.mergeMap.call(preactivationCheckGuards, function (p) {
+                var /** @type {?} */ preactivationResolveData$ = rxjs_operator_mergeMap.mergeMap.call(preactivationCheckGuards$, function (p) {
                     if (_this.navigationId !== id)
                         return rxjs_observable_of.of(false);
                     if (p.shouldActivate) {
@@ -87160,9 +87211,12 @@ module.exports = require("fs");
                         return rxjs_observable_of.of(p);
                     }
                 });
+                var /** @type {?} */ preactivationDone$ = rxjs_operator_mergeMap.mergeMap.call(preactivationResolveData$, function (p) {
+                    return rxjs_operator_map.map.call(_this.hooks.afterPreactivation(p.snapshot), function () { return p; });
+                });
                 // create router state
                 // this operation has side effects => route state is being affected
-                var /** @type {?} */ routerState$ = rxjs_operator_map.map.call(preactivationResolveData$, function (_a) {
+                var /** @type {?} */ routerState$ = rxjs_operator_map.map.call(preactivationDone$, function (_a) {
                     var appliedUrl = _a.appliedUrl, snapshot = _a.snapshot, shouldActivate = _a.shouldActivate;
                     if (shouldActivate) {
                         var /** @type {?} */ state = createRouterState(_this.routeReuseStrategy, snapshot, _this.currentRouterState);
@@ -88886,26 +88940,123 @@ module.exports = require("fs");
         return router.routerState.root;
     }
     /**
-     * @param {?} router
-     * @param {?} ref
-     * @param {?} preloader
-     * @param {?} opts
-     * @return {?}
+     * To initialize the router properly we need to do in two steps:
+     *
+     * We need to start the navigation in a APP_INITIALIZER to block the bootstrap if
+     * a resolver or a guards executes asynchronously. Second, we need to actually run
+     * activation in a BOOTSTRAP_LISTENER. We utilize the afterPreactivation
+     * hook provided by the router to do that.
+     *
+     * The router navigation starts, reaches the point when preactivation is done, and then
+     * pauses. It waits for the hook to be resolved. We then resolve it only in a bootstrap listener.
      */
-    function initialRouterNavigation(router, ref, preloader, opts) {
-        return function (bootstrappedComponentRef) {
+    var RouterInitializer = (function () {
+        /**
+         * @param {?} injector
+         */
+        function RouterInitializer(injector) {
+            this.injector = injector;
+            this.initNavigation = false;
+            this.resultOfPreactivationDone = new rxjs_Subject.Subject();
+        }
+        /**
+         * @return {?}
+         */
+        RouterInitializer.prototype.appInitializer = function () {
+            var _this = this;
+            var /** @type {?} */ p = this.injector.get(_angular_common.LOCATION_INITIALIZED, Promise.resolve(null));
+            return p.then(function () {
+                var /** @type {?} */ resolve = null;
+                var /** @type {?} */ res = new Promise(function (r) { return resolve = r; });
+                var /** @type {?} */ router = _this.injector.get(Router);
+                var /** @type {?} */ opts = _this.injector.get(ROUTER_CONFIGURATION);
+                if (_this.isLegacyDisabled(opts) || _this.isLegacyEnabled(opts)) {
+                    resolve(true);
+                }
+                else if (opts.initialNavigation === 'disabled') {
+                    router.setUpLocationChangeListener();
+                    resolve(true);
+                }
+                else if (opts.initialNavigation === 'enabled') {
+                    router.hooks.afterPreactivation = function () {
+                        // only the initial navigation should be delayed
+                        if (!_this.initNavigation) {
+                            _this.initNavigation = true;
+                            resolve(true);
+                            return _this.resultOfPreactivationDone;
+                        }
+                        else {
+                            return rxjs_observable_of.of(null);
+                        }
+                    };
+                    router.initialNavigation();
+                }
+                else {
+                    throw new Error("Invalid initialNavigation options: '" + opts.initialNavigation + "'");
+                }
+                return res;
+            });
+        };
+        /**
+         * @param {?} bootstrappedComponentRef
+         * @return {?}
+         */
+        RouterInitializer.prototype.bootstrapListener = function (bootstrappedComponentRef) {
+            var /** @type {?} */ opts = this.injector.get(ROUTER_CONFIGURATION);
+            var /** @type {?} */ preloader = this.injector.get(RouterPreloader);
+            var /** @type {?} */ router = this.injector.get(Router);
+            var /** @type {?} */ ref = this.injector.get(_angular_core.ApplicationRef);
             if (bootstrappedComponentRef !== ref.components[0]) {
                 return;
             }
-            router.resetRootComponentType(ref.componentTypes[0]);
-            preloader.setUpPreloading();
-            if (opts.initialNavigation === false) {
-                router.setUpLocationChangeListener();
-            }
-            else {
+            if (this.isLegacyEnabled(opts)) {
                 router.initialNavigation();
             }
+            else if (this.isLegacyDisabled(opts)) {
+                router.setUpLocationChangeListener();
+            }
+            preloader.setUpPreloading();
+            router.resetRootComponentType(ref.componentTypes[0]);
+            this.resultOfPreactivationDone.next(null);
+            this.resultOfPreactivationDone.complete();
         };
+        /**
+         * @param {?} opts
+         * @return {?}
+         */
+        RouterInitializer.prototype.isLegacyEnabled = function (opts) {
+            return opts.initialNavigation === 'legacy_enabled' || opts.initialNavigation === true ||
+                opts.initialNavigation === undefined;
+        };
+        /**
+         * @param {?} opts
+         * @return {?}
+         */
+        RouterInitializer.prototype.isLegacyDisabled = function (opts) {
+            return opts.initialNavigation === 'legacy_disabled' || opts.initialNavigation === false;
+        };
+        RouterInitializer.decorators = [
+            { type: _angular_core.Injectable },
+        ];
+        /** @nocollapse */
+        RouterInitializer.ctorParameters = function () { return [
+            { type: _angular_core.Injector, },
+        ]; };
+        return RouterInitializer;
+    }());
+    /**
+     * @param {?} r
+     * @return {?}
+     */
+    function getAppInitializer(r) {
+        return r.appInitializer.bind(r);
+    }
+    /**
+     * @param {?} r
+     * @return {?}
+     */
+    function getBootstrapListener(r) {
+        return r.bootstrapListener.bind(r);
     }
     /**
      * A token for the router initializer that will be called after the app is bootstrapped.
@@ -88918,11 +89069,14 @@ module.exports = require("fs");
      */
     function provideRouterInitializer() {
         return [
+            RouterInitializer,
             {
-                provide: ROUTER_INITIALIZER,
-                useFactory: initialRouterNavigation,
-                deps: [Router, _angular_core.ApplicationRef, RouterPreloader, ROUTER_CONFIGURATION]
+                provide: _angular_core.APP_INITIALIZER,
+                multi: true,
+                useFactory: getAppInitializer,
+                deps: [RouterInitializer]
             },
+            { provide: ROUTER_INITIALIZER, useFactory: getBootstrapListener, deps: [RouterInitializer] },
             { provide: _angular_core.APP_BOOTSTRAP_LISTENER, multi: true, useExisting: ROUTER_INITIALIZER },
         ];
     }
@@ -88930,7 +89084,7 @@ module.exports = require("fs");
     /**
      * @stable
      */
-    var /** @type {?} */ VERSION = new _angular_core.Version('3.4.9');
+    var /** @type {?} */ VERSION = new _angular_core.Version('3.4.10');
 
     var /** @type {?} */ __router_private__ = {
         ROUTER_PROVIDERS: ROUTER_PROVIDERS,
@@ -89975,8 +90129,8 @@ var core_1 = __webpack_require__(0);
 var http_1 = __webpack_require__(17);
 var Observable_1 = __webpack_require__(1);
 __webpack_require__(122);
-var http = __webpack_require__(148);
-var https = __webpack_require__(149);
+var http = __webpack_require__(149);
+var https = __webpack_require__(150);
 var url = __webpack_require__(34);
 var tokens_1 = __webpack_require__(13);
 var helper_1 = __webpack_require__(12);
@@ -98273,7 +98427,7 @@ exports.prebootstrap = prebootstrap;
 var preboot_inline_1 = __webpack_require__(115);
 var preboot_browser_1 = __webpack_require__(114);
 var fs = __webpack_require__(65);
-var path = __webpack_require__(150);
+var path = __webpack_require__(151);
 var inlineCodeCache = {};
 // exporting default options in case developer wants to use these + custom on top
 exports.defaultOptions = {
@@ -99852,7 +100006,7 @@ var FromObservable = (function (_super) {
      */
     FromObservable.create = function (ish, scheduler) {
         if (ish != null) {
-            if (typeof ish[observable_1.$$observable] === 'function') {
+            if (typeof ish[observable_1.observable] === 'function') {
                 if (ish instanceof Observable_1.Observable && !scheduler) {
                     return ish;
                 }
@@ -99864,7 +100018,7 @@ var FromObservable = (function (_super) {
             else if (isPromise_1.isPromise(ish)) {
                 return new PromiseObservable_1.PromiseObservable(ish, scheduler);
             }
-            else if (typeof ish[iterator_1.$$iterator] === 'function' || typeof ish === 'string') {
+            else if (typeof ish[iterator_1.iterator] === 'function' || typeof ish === 'string') {
                 return new IteratorObservable_1.IteratorObservable(ish, scheduler);
             }
             else if (isArrayLike_1.isArrayLike(ish)) {
@@ -99877,10 +100031,10 @@ var FromObservable = (function (_super) {
         var ish = this.ish;
         var scheduler = this.scheduler;
         if (scheduler == null) {
-            return ish[observable_1.$$observable]().subscribe(subscriber);
+            return ish[observable_1.observable]().subscribe(subscriber);
         }
         else {
-            return ish[observable_1.$$observable]().subscribe(new observeOn_1.ObserveOnSubscriber(subscriber, scheduler, 0));
+            return ish[observable_1.observable]().subscribe(new observeOn_1.ObserveOnSubscriber(subscriber, scheduler, 0));
         }
     };
     return FromObservable;
@@ -99979,7 +100133,7 @@ var StringIterator = (function () {
         this.idx = idx;
         this.len = len;
     }
-    StringIterator.prototype[iterator_1.$$iterator] = function () { return (this); };
+    StringIterator.prototype[iterator_1.iterator] = function () { return (this); };
     StringIterator.prototype.next = function () {
         return this.idx < this.len ? {
             done: false,
@@ -99999,7 +100153,7 @@ var ArrayIterator = (function () {
         this.idx = idx;
         this.len = len;
     }
-    ArrayIterator.prototype[iterator_1.$$iterator] = function () { return this; };
+    ArrayIterator.prototype[iterator_1.iterator] = function () { return this; };
     ArrayIterator.prototype.next = function () {
         return this.idx < this.len ? {
             done: false,
@@ -100012,7 +100166,7 @@ var ArrayIterator = (function () {
     return ArrayIterator;
 }());
 function getIterator(obj) {
-    var i = obj[iterator_1.$$iterator];
+    var i = obj[iterator_1.iterator];
     if (!i && typeof obj === 'string') {
         return new StringIterator(obj);
     }
@@ -100022,7 +100176,7 @@ function getIterator(obj) {
     if (!i) {
         throw new TypeError('object is not iterable');
     }
-    return obj[iterator_1.$$iterator]();
+    return obj[iterator_1.iterator]();
 }
 var maxSafeInteger = Math.pow(2, 53) - 1;
 function toLength(o) {
@@ -101080,8 +101234,8 @@ function toSubscriber(nextOrObserver, error, complete) {
         if (nextOrObserver instanceof Subscriber_1.Subscriber) {
             return nextOrObserver;
         }
-        if (nextOrObserver[rxSubscriber_1.$$rxSubscriber]) {
-            return nextOrObserver[rxSubscriber_1.$$rxSubscriber]();
+        if (nextOrObserver[rxSubscriber_1.rxSubscriber]) {
+            return nextOrObserver[rxSubscriber_1.rxSubscriber]();
         }
     }
     if (!nextOrObserver && !error && !complete) {
@@ -101323,39 +101477,39 @@ computeIgnoreFrames();
 
 /***/ }),
 /* 147 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = require("events");
+module.exports = __webpack_require__;
 
 /***/ }),
 /* 148 */
 /***/ (function(module, exports) {
 
-module.exports = require("http");
+module.exports = require("events");
 
 /***/ }),
 /* 149 */
 /***/ (function(module, exports) {
 
-module.exports = require("https");
+module.exports = require("http");
 
 /***/ }),
 /* 150 */
 /***/ (function(module, exports) {
 
-module.exports = require("path");
+module.exports = require("https");
 
 /***/ }),
 /* 151 */
 /***/ (function(module, exports) {
 
-module.exports = require("timers");
+module.exports = require("path");
 
 /***/ }),
 /* 152 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = __webpack_require__;
+module.exports = require("timers");
 
 /***/ })
 /******/ ]);
