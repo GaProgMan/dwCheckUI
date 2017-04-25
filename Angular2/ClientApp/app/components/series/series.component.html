@@ -1,0 +1,26 @@
+﻿<h1>Series Search</h1>
+<div class="row">
+    <div class="col-xs-12">
+        <input [value]="searchString" (input)="searchString = $event.target.value" />
+        <button (click)="getDwSeries()">Search</button>
+    </div>
+</div>
+<div class="loader" *ngIf="!success">
+    <p>Could not find any results</p>
+</div>
+<div class="table-responsive" *ngIf="success">
+    <table class='table' *ngIf="series">
+        <thead>
+            <tr>
+                <th colspan="2">Name</th>
+                <th>Books</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let ser of series">
+                <td colspan="2">{{ ser.seriesName }}</td>
+                <td>{{ ser.booksAsString() }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

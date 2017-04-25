@@ -5,6 +5,7 @@ import { AppComponent } from './components/app/app.component'
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { BooksComponent } from './components/books/books.component';
 import { CharacterComponent } from './components/characters/characters.component';
+import { SeriesComponent } from './components/series/series.component';
 import { AboutComponent } from './components/about/about.component';
 
 @NgModule({
@@ -14,6 +15,7 @@ import { AboutComponent } from './components/about/about.component';
         NavMenuComponent,
         CharacterComponent,
         BooksComponent,
+        SeriesComponent,
         AboutComponent
     ],
     imports: [
@@ -22,6 +24,7 @@ import { AboutComponent } from './components/about/about.component';
             { path: '', redirectTo: 'books', pathMatch: 'full' },
             { path: 'books', component: BooksComponent },
             { path: 'characters', component: CharacterComponent },
+            { path: 'series', component: SeriesComponent },
             { path: 'about', component: AboutComponent },
             { path: '**', redirectTo: 'about' }
         ])
