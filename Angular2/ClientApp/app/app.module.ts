@@ -21,7 +21,7 @@ import { AboutComponent } from './components/about/about.component';
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         RouterModule.forRoot([
-            { path: '', redirectTo: 'books', pathMatch: 'full' },
+            { path: '', redirectTo: 'about', pathMatch: 'full' },
             { path: 'books', component: BooksComponent },
             { path: 'characters', component: CharacterComponent },
             { path: 'series', component: SeriesComponent },
