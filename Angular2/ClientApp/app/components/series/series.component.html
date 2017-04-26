@@ -1,14 +1,16 @@
 ﻿<h1>Series Search</h1>
 <div class="row">
     <div class="col-xs-12">
-        <input [value]="searchString" (input)="searchString = $event.target.value" />
+        <input [value]="searchString" (input)="searchString = $event.target.value" (keyup.enter)="getDwSeries()"/>
         <button (click)="getDwSeries()">Search</button>
     </div>
 </div>
-<div class="loader" *ngIf="!success">
-    <p>Could not find any results</p>
+
+<div class="loader" *ngIf="loading">
+    <p>Searching, please wait</p>
 </div>
-<div class="table-responsive" *ngIf="success">
+
+<div class="table-responsive" *ngIf="!loading && success && series">
     <table class='table' *ngIf="series">
         <thead>
             <tr>
@@ -23,4 +25,10 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<div class="row" *ngIf="!loading && !success">
+    <div class="col-xs-12">
+        No results found
+    </div>
 </div>

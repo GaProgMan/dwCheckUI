@@ -13,7 +13,7 @@ export class SeriesComponent {
 
         this.success = true;
         this.loading = false;
-        this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/series/search?searchString';
+        this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/series/search?searchString=';
         this.registerFunctions();
     }
     // private vars
@@ -31,17 +31,18 @@ export class SeriesComponent {
 
     private registerFunctions() {
         this.getDwSeries = () => {
-            this.success = false;
             var route = `${this.baseApiUrl}${this.searchString}`;
+            this.loading = true;
             this.http.get(route).subscribe((result) => {
                 var resultJson = result.json() as IResultJson;
                 if(resultJson.success) {
-                    this.success = true;
                     this.series = new Array<ISeries>();
                     result.json().result.forEach(element => {
                         this.series.push(new Series(element.seriesName, element.bookNames));
                     });
                 }
+                this.success = resultJson.success;
+                this.loading = false;
             });
         }
     }

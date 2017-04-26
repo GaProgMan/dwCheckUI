@@ -12,6 +12,7 @@ export class BooksComponent {
         this.http = http;
 
         this.loading = false;
+        this.success = true;
         this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/Books/Search?searchString=';
         this.books = null;
         this.registerFunctions();
@@ -43,6 +44,7 @@ export class BooksComponent {
                                 element.bookCoverImageUrl));
                     });
                 }
+                this.success = resultJson.success;
                 this.loading = false;
             });
         }

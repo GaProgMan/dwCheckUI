@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8f3cc2e3538351069607"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2a8dcb0c625f086241a9"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -1525,7 +1525,7 @@ AppModule = __decorate([
         imports: [
             angular2_universal_1.UniversalModule,
             router_1.RouterModule.forRoot([
-                { path: '', redirectTo: 'books', pathMatch: 'full' },
+                { path: '', redirectTo: 'about', pathMatch: 'full' },
                 { path: 'books', component: books_component_1.BooksComponent },
                 { path: 'characters', component: characters_component_1.CharacterComponent },
                 { path: 'series', component: series_component_1.SeriesComponent },
@@ -1619,6 +1619,7 @@ var BooksComponent = (function () {
         this.searchString = '';
         this.http = http;
         this.loading = false;
+        this.success = true;
         this.baseApiUrl = 'http://dwcheckapi.azurewebsites.net/Books/Search?searchString=';
         this.books = null;
         this.registerFunctions();
@@ -1636,6 +1637,7 @@ var BooksComponent = (function () {
                         _this.books.push(new Book_1.Book(element.bookName, element.bookIsbn10, element.bookIsbn13, element.bookDescription, element.bookCoverImageUrl));
                     });
                 }
+                _this.success = resultJson.success;
                 _this.loading = false;
             });
         };
@@ -1683,17 +1685,18 @@ var CharacterComponent = (function () {
     CharacterComponent.prototype.registerFunctions = function () {
         var _this = this;
         this.getDwCharacter = function () {
-            _this.success = false;
             var route = "" + _this.baseApiUrl + _this.searchString;
+            _this.loading = true;
             _this.http.get(route).subscribe(function (result) {
                 var resultJson = result.json();
                 if (resultJson.success) {
-                    _this.success = true;
                     _this.characters = new Array();
                     result.json().result.forEach(function (element) {
                         _this.characters.push(new Character_1.Character(element.characterName, element.books));
                     });
                 }
+                _this.success = resultJson.success;
+                _this.loading = false;
             });
         };
     };
@@ -1763,23 +1766,24 @@ var SeriesComponent = (function () {
         this.http = http;
         this.success = true;
         this.loading = false;
-        this.baseApiUrl = 'http://dwcheckapi.azurewebsites.net/series/search?searchString';
+        this.baseApiUrl = 'http://dwcheckapi.azurewebsites.net/series/search?searchString=';
         this.registerFunctions();
     }
     SeriesComponent.prototype.registerFunctions = function () {
         var _this = this;
         this.getDwSeries = function () {
-            _this.success = false;
             var route = "" + _this.baseApiUrl + _this.searchString;
+            _this.loading = true;
             _this.http.get(route).subscribe(function (result) {
                 var resultJson = result.json();
                 if (resultJson.success) {
-                    _this.success = true;
                     _this.series = new Array();
                     result.json().result.forEach(function (element) {
                         _this.series.push(new Series_1.Series(element.seriesName, element.bookNames));
                     });
                 }
+                _this.success = resultJson.success;
+                _this.loading = false;
             });
         };
     };
@@ -2225,13 +2229,13 @@ module.exports = "<div class='container-fluid'>\r\n    <div class='row'>\r\n    
 /* 28 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Book Search</h1>\r\n\r\n<div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\"/>\r\n        <button (click)=\"getDwBook()\">Search</button>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"loader\" *ngIf=\"loading\">\r\n    <p>Searching, please wait</p>\r\n</div>\r\n\r\n<div class=\"table-responsive\" *ngIf=\"!loading && books\">\r\n    <table class='table'>\r\n        <thead>\r\n            <tr>\r\n                <th colspan=\"2\">Cover</th>\r\n                <th colspan=\"2\">Name</th>\r\n                <th>ISBN 10</th>\r\n                <th>ISBN 13</th>\r\n                <th>Description</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let book of books\">\r\n                <td colspan=\"2\"><img src=\"{{book.bookCoverImageUrl}}\" class=\"img-responsive\"/></td>\r\n                <td colspan=\"2\">{{ book.bookName }}</td>\r\n                <td>{{ book.bookIsbn10 }}</td>\r\n                <td>{{ book.bookIsbn13 }}</td>\r\n                <td>{{ book.bookDescription }}</td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>";
+module.exports = "<h1>Book Search</h1>\r\n\r\n<div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\" (keyup.enter)=\"getDwBook()\"/>\r\n        <button (click)=\"getDwBook()\">Search</button>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"loader\" *ngIf=\"loading\">\r\n    <p>Searching, please wait</p>\r\n</div>\r\n\r\n<div class=\"table-responsive\" *ngIf=\"!loading && success && books\">\r\n    <table class='table'>\r\n        <thead>\r\n            <tr>\r\n                <th colspan=\"2\">Cover</th>\r\n                <th colspan=\"2\">Name</th>\r\n                <th>ISBN 10</th>\r\n                <th>ISBN 13</th>\r\n                <th>Description</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let book of books\">\r\n                <td colspan=\"2\"><img src=\"{{book.bookCoverImageUrl}}\" class=\"img-responsive\"/></td>\r\n                <td colspan=\"2\">{{ book.bookName }}</td>\r\n                <td>{{ book.bookIsbn10 }}</td>\r\n                <td>{{ book.bookIsbn13 }}</td>\r\n                <td>{{ book.bookDescription }}</td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n\r\n<div class=\"row\" *ngIf=\"!loading && !success\">\r\n    <div class=\"col-xs-12\">\r\n        No results found\r\n    </div>\r\n</div>";
 
 /***/ }),
 /* 29 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Character Search</h1>\r\n\r\n<div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\"/>\r\n        <button (click)=\"getDwCharacter()\">Search</button>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"loader\" *ngIf=\"!success\">\r\n    <p>Could not find any results</p>\r\n</div>\r\n\r\n<div class=\"table-responsive\" *ngIf=\"success\">\r\n    <table class='table' *ngIf=\"characters\">\r\n        <thead>\r\n            <tr>\r\n                <th colspan=\"2\">Name</th>\r\n                <th>Books</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let char of characters\">\r\n                <td colspan=\"2\">{{ char.characterName }}</td>\r\n                <td>{{ char.booksAsString() }}</td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>";
+module.exports = "<h1>Character Search</h1>\r\n\r\n<div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\" (keyup.enter)=\"getDwCharacter()\"/>\r\n        <button (click)=\"getDwCharacter()\">Search</button>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"loader\" *ngIf=\"loading\">\r\n    <p>Searching, please wait</p>\r\n</div>\r\n\r\n<div class=\"table-responsive\" *ngIf=\"!loading && success && characters\">\r\n    <table class='table' *ngIf=\"characters\">\r\n        <thead>\r\n            <tr>\r\n                <th colspan=\"2\">Name</th>\r\n                <th>Books</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let char of characters\">\r\n                <td colspan=\"2\">{{ char.characterName }}</td>\r\n                <td>{{ char.booksAsString() }}</td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n\r\n<div class=\"row\" *ngIf=\"!loading && !success\">\r\n    <div class=\"col-xs-12\">\r\n        No results found\r\n    </div>\r\n</div>";
 
 /***/ }),
 /* 30 */
@@ -2243,7 +2247,7 @@ module.exports = "<div class='main-nav'>\r\n    <div class='navbar navbar-invers
 /* 31 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Series Search</h1>\r\n<div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\" />\r\n        <button (click)=\"getDwSeries()\">Search</button>\r\n    </div>\r\n</div>\r\n<div class=\"loader\" *ngIf=\"!success\">\r\n    <p>Could not find any results</p>\r\n</div>\r\n<div class=\"table-responsive\" *ngIf=\"success\">\r\n    <table class='table' *ngIf=\"series\">\r\n        <thead>\r\n            <tr>\r\n                <th colspan=\"2\">Name</th>\r\n                <th>Books</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let ser of series\">\r\n                <td colspan=\"2\">{{ ser.seriesName }}</td>\r\n                <td>{{ ser.booksAsString() }}</td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>";
+module.exports = "<h1>Series Search</h1>\r\n<div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\" (keyup.enter)=\"getDwSeries()\"/>\r\n        <button (click)=\"getDwSeries()\">Search</button>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"loader\" *ngIf=\"loading\">\r\n    <p>Searching, please wait</p>\r\n</div>\r\n\r\n<div class=\"table-responsive\" *ngIf=\"!loading && success && series\">\r\n    <table class='table' *ngIf=\"series\">\r\n        <thead>\r\n            <tr>\r\n                <th colspan=\"2\">Name</th>\r\n                <th>Books</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let ser of series\">\r\n                <td colspan=\"2\">{{ ser.seriesName }}</td>\r\n                <td>{{ ser.booksAsString() }}</td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n\r\n<div class=\"row\" *ngIf=\"!loading && !success\">\r\n    <div class=\"col-xs-12\">\r\n        No results found\r\n    </div>\r\n</div>";
 
 /***/ }),
 /* 32 */

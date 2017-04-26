@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <input [value]="searchString" (input)="searchString = $event.target.value"/>
+        <input [value]="searchString" (input)="searchString = $event.target.value" (keyup.enter)="getDwBook()"/>
         <button (click)="getDwBook()">Search</button>
     </div>
 </div>
@@ -11,7 +11,7 @@
     <p>Searching, please wait</p>
 </div>
 
-<div class="table-responsive" *ngIf="!loading && books">
+<div class="table-responsive" *ngIf="!loading && success && books">
     <table class='table'>
         <thead>
             <tr>
@@ -32,4 +32,10 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<div class="row" *ngIf="!loading && !success">
+    <div class="col-xs-12">
+        No results found
+    </div>
 </div>

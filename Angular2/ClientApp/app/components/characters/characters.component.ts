@@ -20,8 +20,8 @@ export class CharacterComponent {
     private http: Http;
 
     // public bound vars
-    success: boolean;
     loading: boolean;
+    success: boolean;
     baseApiUrl: string;
     searchString = '';
     characters: ICharacter[];
@@ -31,17 +31,18 @@ export class CharacterComponent {
 
     private registerFunctions() {
         this.getDwCharacter = () => {
-            this.success = false;
             var route = `${this.baseApiUrl}${this.searchString}`;
+            this.loading = true;
             this.http.get(route).subscribe((result) => {
                 var resultJson = result.json() as IResultJson;
                 if(resultJson.success) {
-                    this.success = true;
                     this.characters = new Array<ICharacter>();
                     result.json().result.forEach(element => {
                         this.characters.push(new Character(element.characterName, element.books));
                     });
                 }
+                this.success = resultJson.success;
+                this.loading = false;
             });
         }
     }
