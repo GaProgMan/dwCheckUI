@@ -1,4 +1,4 @@
-﻿export class ResultJson{
+export class ResultJson {
     success: boolean;
     result: string;
 }

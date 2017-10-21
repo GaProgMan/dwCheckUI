@@ -1,6 +1,6 @@
-﻿export class Book implements IBook {
+export class Book {
     constructor(bookName: string, bookIsbn10: string, bookIsbn13:
-                string, bookDescription: string, bookCoverImageUrl: string){
+        string, bookDescription: string, bookCoverImageUrl: string){
         this.bookName = bookName;
         this.bookIsbn10 = bookIsbn10;
         this.bookIsbn13 = bookIsbn13;
