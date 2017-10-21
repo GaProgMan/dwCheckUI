@@ -254,3 +254,6 @@ paket-files/
 
 # Mac OS chaff
 .DS_Store
+
+ClientApp/dist/
+wwwroot/dist/
