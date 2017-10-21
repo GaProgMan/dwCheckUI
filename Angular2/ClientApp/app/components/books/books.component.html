@@ -1,9 +1,18 @@
 <h1>Book Search</h1>
 
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-4">
         <input [value]="searchString" (input)="searchString = $event.target.value" (keyup.enter)="getDwBook()"/>
         <button (click)="getDwBook()">Search</button>
+    </div>
+    <div class="col-xs-3">
+        <label for="displayCharacterCheckbox">Display Characters</label>
+        <input id="displayCharacterCheckbox" type="checkbox" [checked]="displayCharacters" (change)="displayCharacters = !displayCharacters"/>
+    </div>
+
+    <div class="col-xs-3">
+        <label for="displaySeriesCheckBox" >Display Series</label>
+        <input id="displaySeriesCheckBox" type="checkbox" [checked]="displaySeries" (change)="displaySeries = !displaySeries"/>
     </div>
 </div>
 
@@ -20,6 +29,9 @@
             <th>ISBN 10</th>
             <th>ISBN 13</th>
             <th>Description</th>
+            
+            <th *ngIf="displayCharacters">Characters</th>
+            <th *ngIf="displaySeries">Series</th>
         </tr>
         </thead>
         <tbody>
@@ -29,6 +41,9 @@
             <td>{{ book.bookIsbn10 }}</td>
             <td>{{ book.bookIsbn13 }}</td>
             <td>{{ book.bookDescription }}</td>
+            
+            <td *ngIf="displayCharacters">{{ book.charactersAsString() }}</td>
+            <td *ngIf="displaySeries">{{ book.seriesAsString() }}</td>
         </tr>
         </tbody>
     </table>

@@ -6,31 +6,31 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
-import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
+import { AboutComponent } from './components/about/about.component';
 import { BooksComponent } from './components/books/books.component';
+import { CharacterComponent} from "./components/characters/characters.component";
+import { SeriesComponent } from "./components/series/series.component";
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
-        CounterComponent,
-        FetchDataComponent,
+        AboutComponent,
         BooksComponent,
-        HomeComponent
+        CharacterComponent,
+        SeriesComponent
     ],
     imports: [
         CommonModule,
         HttpModule,
         FormsModule,
         RouterModule.forRoot([
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: 'home', component: HomeComponent },
-            { path: 'counter', component: CounterComponent },
-            { path: 'fetch-data', component: FetchDataComponent },
+            { path: '', redirectTo: 'about', pathMatch: 'full' },
+            { path: 'about', component: AboutComponent },
             { path: 'books', component: BooksComponent },
-            { path: '**', redirectTo: 'home' }
+            { path: 'characters', component: CharacterComponent },
+            { path: 'series', component: SeriesComponent },
+            { path: '**', redirectTo: 'about' }
         ])
     ]
 })

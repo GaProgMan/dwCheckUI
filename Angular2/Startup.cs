@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClacksMiddleware.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Angular2
+namespace dwCheckUi
 {
     public class Startup
     {
@@ -40,6 +41,9 @@ namespace Angular2
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            //"Do you not know that a man is not dead while his name is still spoken?"
+            app.GnuTerryPratchett();
 
             app.UseStaticFiles();
 
