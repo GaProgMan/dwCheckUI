@@ -1,4 +1,4 @@
-﻿interface IBook {
+interface IBook {
     bookName: string;
     bookIsbn10: string;
     bookIsbn13: string;
