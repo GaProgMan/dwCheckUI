@@ -17,6 +17,9 @@ export class BooksComponent {
         this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/Books/Search?searchString=';
         this.books = [];
         
+        this.displayCharacters = false;
+        this.displaySeries = false;
+        
         this.registerFunctions();
     }
     
@@ -29,6 +32,9 @@ export class BooksComponent {
     searchString = '';
     books: Book[];
 
+    displayCharacters: boolean;
+    displaySeries: boolean;
+
     getDwBook: () => void;
 
     private registerFunctions() {
@@ -39,8 +45,13 @@ export class BooksComponent {
                 var resultJson = result.json() as ResultJson;
                 if(resultJson.success) {
                     this.books = [];
-                    result.json().result.forEach((serverBook: Book) => {
-                         this.books.push(serverBook);
+                    result.json().result.forEach((serverBook: ApiBook) => {
+                        this.books.push(
+                            new Book(serverBook.bookName, serverBook.bookIsbn10,
+                                serverBook.bookIsbn13,
+                                serverBook.bookDescription, serverBook.bookCoverImageUrl,
+                                serverBook.characters, serverBook.series)
+                        );
                     });
                 }
                 this.success = resultJson.success;
@@ -48,4 +59,15 @@ export class BooksComponent {
             });
         }
     }
+}
+
+interface ApiBook {
+    bookCoverImage: string;
+    bookCoverImageUrl: string;
+    bookDescription: string;
+    bookIsbn10: string;
+    bookIsbn13: string;
+    bookName: string;
+    characters: string[];
+    series: string[];
 }

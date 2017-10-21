@@ -7,19 +7,24 @@
                 <span class='icon-bar'></span>
                 <span class='icon-bar'></span>
             </button>
-            <a class='navbar-brand' [routerLink]="['/home']">dwCheckUi</a>
+            <a class='navbar-brand' [routerLink]="['/about']">dwCheckUi</a>
         </div>
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse'>
             <ul class='nav navbar-nav'>
                 <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/home']">
-                        <span class='glyphicon glyphicon-home'></span> Home
+                    <a [routerLink]="['/books']">
+                        <span class='glyphicon glyphicon-book'></span> Books
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/books']">
-                        <span class='glyphicon glyphicon-book'></span> Books
+                    <a [routerLink]="['/characters']">
+                        <span class='glyphicon glyphicon-user'></span> Characters
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/series']">
+                        <span class='glyphicon glyphicon-tags'></span> Series
                     </a>
                 </li>
             </ul>

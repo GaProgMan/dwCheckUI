@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular2", "Angular2.csproj", "{58B3B666-A8D6-4F6B-AE75-5BDA0F3AE08E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dwCheckUi", "dwCheckUi.csproj", "{58B3B666-A8D6-4F6B-AE75-5BDA0F3AE08E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
