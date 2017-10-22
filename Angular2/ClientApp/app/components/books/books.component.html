@@ -37,7 +37,11 @@
         <tbody>
         <tr *ngFor="let book of books">
             <td colspan="2"><img src="{{book.bookCoverImageUrl}}" class="img-responsive"/></td>
-            <td colspan="2">{{ book.bookName }}</td>
+            <td colspan="2">
+                <a [routerLink]="['/bookProfile', book.bookOrdinal]">
+                {{ book.bookName }}
+                </a>
+            </td>
             <td>{{ book.bookIsbn10 }}</td>
             <td>{{ book.bookIsbn13 }}</td>
             <td>{{ book.bookDescription }}</td>

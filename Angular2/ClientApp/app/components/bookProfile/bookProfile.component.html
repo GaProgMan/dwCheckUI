@@ -1,0 +1,45 @@
+<div class="loader" *ngIf="loading">
+    <p>Searching, please wait</p>
+</div>
+
+<div class="row" *ngIf="!loading && success && book">
+    <div class="col-xs-12">
+        <h1>{{ book.bookName }}</h1>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-3">
+            <img src="{{book.bookCoverImageUrl}}" class="img-responsive"/>
+        </div>
+        <div class="col-xs-9">
+            <p>{{ book.bookDescription }}</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ISBN 10</th>
+                        <th>ISBN 13</th>
+                        <th>Series</th>
+                        <th>Characters</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ book.bookIsbn10 }}</td>
+                        <td>{{ book.bookIsbn13 }}</td>
+                        <td>{{ book.seriesAsString() }}</td>
+                        <td>
+                            <span [innerHTML]="book.charactersWithLineBreaks()"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

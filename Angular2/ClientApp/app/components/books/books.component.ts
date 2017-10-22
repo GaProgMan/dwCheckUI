@@ -47,8 +47,8 @@ export class BooksComponent {
                     this.books = [];
                     result.json().result.forEach((serverBook: ApiBook) => {
                         this.books.push(
-                            new Book(serverBook.bookName, serverBook.bookIsbn10,
-                                serverBook.bookIsbn13,
+                            new Book(serverBook.bookOrdinal, serverBook.bookName,
+                                serverBook.bookIsbn10, serverBook.bookIsbn13,
                                 serverBook.bookDescription, serverBook.bookCoverImageUrl,
                                 serverBook.characters, serverBook.series)
                         );
@@ -62,6 +62,7 @@ export class BooksComponent {
 }
 
 interface ApiBook {
+    bookOrdinal: number;
     bookCoverImage: string;
     bookCoverImageUrl: string;
     bookDescription: string;
