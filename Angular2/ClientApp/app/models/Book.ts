@@ -1,7 +1,8 @@
 export class Book {
-    constructor(bookName: string, bookIsbn10: string, bookIsbn13: string,
-                bookDescription: string, bookCoverImageUrl: string,
+    constructor(bookOrdinal: number, bookName: string, bookIsbn10: string,
+                bookIsbn13: string,  bookDescription: string, bookCoverImageUrl: string,
                 characters: string[], series: string[]){
+        this.bookOrdinal = bookOrdinal;
         this.bookName = bookName;
         this.bookIsbn10 = bookIsbn10;
         this.bookIsbn13 = bookIsbn13;
@@ -13,6 +14,7 @@ export class Book {
         this.registerFunctions();
     }
 
+    bookOrdinal: number;
     bookName: string;
     bookIsbn10: string;
     bookIsbn13: string;
@@ -23,6 +25,8 @@ export class Book {
     
     charactersAsString: () => string;
     seriesAsString: () => string;
+    
+    charactersWithLineBreaks: () => string;
     
     registerFunctions = () =>  {
         this.charactersAsString = () => {
@@ -35,6 +39,12 @@ export class Book {
           return this.series.length > 0
               ? this.series.join(',')
               : ''; 
-        }
+        };
+        
+        this.charactersWithLineBreaks = () =>  {
+            return this.characters.length > 0
+                ? this.characters.join('<br />')
+                : '';
+        };
     }
 }
