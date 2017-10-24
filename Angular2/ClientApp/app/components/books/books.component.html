@@ -5,15 +5,6 @@
         <input [value]="searchString" (input)="searchString = $event.target.value" (keyup.enter)="getDwBook()"/>
         <button (click)="getDwBook()">Search</button>
     </div>
-    <div class="col-xs-3">
-        <label for="displayCharacterCheckbox">Display Characters</label>
-        <input id="displayCharacterCheckbox" type="checkbox" [checked]="displayCharacters" (change)="displayCharacters = !displayCharacters"/>
-    </div>
-
-    <div class="col-xs-3">
-        <label for="displaySeriesCheckBox" >Display Series</label>
-        <input id="displaySeriesCheckBox" type="checkbox" [checked]="displaySeries" (change)="displaySeries = !displaySeries"/>
-    </div>
 </div>
 
 <div class="loader" *ngIf="loading">
@@ -47,9 +38,6 @@
             <td>{{ book.bookIsbn10 }}</td>
             <td>{{ book.bookIsbn13 }}</td>
             <td>{{ book.bookDescription }}</td>
-            
-            <td *ngIf="displayCharacters">{{ book.charactersAsString() }}</td>
-            <td *ngIf="displaySeries">{{ book.seriesAsString() }}</td>
         </tr>
         </tbody>
     </table>
