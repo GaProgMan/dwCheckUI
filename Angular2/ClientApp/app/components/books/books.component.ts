@@ -49,7 +49,8 @@ export class BooksComponent {
                         this.books.push(
                             new Book(serverBook.bookOrdinal, serverBook.bookName,
                                 serverBook.bookIsbn10, serverBook.bookIsbn13,
-                                serverBook.bookDescription, serverBook.bookCoverImageUrl,
+                                serverBook.bookDescription, serverBook.bookCoverImage,
+                                serverBook.bookImageIsBase64String,
                                 serverBook.characters, serverBook.series)
                         );
                     });
@@ -64,7 +65,7 @@ export class BooksComponent {
 interface ApiBook {
     bookOrdinal: number;
     bookCoverImage: string;
-    bookCoverImageUrl: string;
+    bookImageIsBase64String: boolean;
     bookDescription: string;
     bookIsbn10: string;
     bookIsbn13: string;

@@ -1,18 +1,26 @@
 export class BookBaseViewModel {
-    constructor(bookDescription: string, bookCoverImageUrl: string){
+    constructor(bookDescription: string, bookCoverImage: string, bookImageBase64: boolean) {
         this.bookDescription = bookDescription;
-        this.bookCoverImageUrl = bookCoverImageUrl;
+        this.bookCoverImage = bookCoverImage;
+        this.bookImageIsBase64 = bookImageBase64;
     }
 
     bookDescription: string;
-    bookCoverImageUrl: string;
+    bookCoverImage: string;
+    bookImageIsBase64: boolean;
+
+    imageTag = (): string =>{
+        return this.bookImageIsBase64
+        ? `data:image/png;base64,${this.bookCoverImage}`
+        : `${this.bookCoverImage}`;
+    }
 }
 
 export class Book extends BookBaseViewModel {
     constructor(bookOrdinal: number, bookName: string, bookIsbn10: string,
-                bookIsbn13: string,  bookDescription: string, bookCoverImageUrl: string,
-                characters: string[], series: string[]) {
-        super(bookDescription, bookCoverImageUrl);
+                bookIsbn13: string,  bookDescription: string, bookCoverImage: string,
+                bookCoverIsBase64: boolean, characters: string[], series: string[]) {
+        super(bookDescription, bookCoverImage, bookCoverIsBase64);
         
         this.bookOrdinal = bookOrdinal;
         this.bookName = bookName;
