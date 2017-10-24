@@ -30,11 +30,12 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
 
             this.http.get(route).subscribe((result) => {
                 var resultJson = result.json() as ResultJson;
-                debugger;
                 if (resultJson.success) {
                     this.books = [];
                     result.json().result.forEach((serverBook: ApiBookBaseViewModel) => {
-                        this.books.push(new BookBaseViewModel(serverBook.bookDescription, serverBook.bookCoverImageUrl));
+                        this.books.push(
+                            new BookBaseViewModel(serverBook.bookDescription,
+                                serverBook.bookCoverImage, serverBook.bookImageIsBase64String));
                     });
                 }
                 this.success = resultJson.success;
@@ -50,6 +51,7 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
 }
 
 interface ApiBookBaseViewModel {
-    bookCoverImageUrl: string;
+    bookCoverImage: string;
+    bookImageIsBase64String: boolean;
     bookDescription: string;
 }

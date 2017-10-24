@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7f4ab09b094c2f747a27"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "edba26bab819827125c8"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -33904,17 +33904,24 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var BookBaseViewModel = (function () {
-    function BookBaseViewModel(bookDescription, bookCoverImageUrl) {
+    function BookBaseViewModel(bookDescription, bookCoverImage, bookImageBase64) {
+        var _this = this;
+        this.imageTag = function () {
+            return _this.bookImageIsBase64
+                ? "data:image/png;base64," + _this.bookCoverImage
+                : "" + _this.bookCoverImage;
+        };
         this.bookDescription = bookDescription;
-        this.bookCoverImageUrl = bookCoverImageUrl;
+        this.bookCoverImage = bookCoverImage;
+        this.bookImageIsBase64 = bookImageBase64;
     }
     return BookBaseViewModel;
 }());
 
 var Book = (function (_super) {
     __extends(Book, _super);
-    function Book(bookOrdinal, bookName, bookIsbn10, bookIsbn13, bookDescription, bookCoverImageUrl, characters, series) {
-        var _this = _super.call(this, bookDescription, bookCoverImageUrl) || this;
+    function Book(bookOrdinal, bookName, bookIsbn10, bookIsbn13, bookDescription, bookCoverImage, bookCoverIsBase64, characters, series) {
+        var _this = _super.call(this, bookDescription, bookCoverImage, bookCoverIsBase64) || this;
         _this.registerFunctions = function () {
             _this.charactersAsString = function () {
                 return _this.characters.length > 0
@@ -70041,7 +70048,7 @@ var BookProfileComponent = (function () {
                 var resultJson = result.json();
                 if (resultJson.success) {
                     var serverBook = result.json().result;
-                    _this.book = new __WEBPACK_IMPORTED_MODULE_3__models_Book__["b" /* Book */](serverBook.bookOrdinal, serverBook.bookName, serverBook.bookIsbn10, serverBook.bookIsbn13, serverBook.bookDescription, serverBook.bookCoverImageUrl, serverBook.characters, serverBook.series);
+                    _this.book = new __WEBPACK_IMPORTED_MODULE_3__models_Book__["b" /* Book */](serverBook.bookOrdinal, serverBook.bookName, serverBook.bookIsbn10, serverBook.bookIsbn13, serverBook.bookDescription, serverBook.bookCoverImage, serverBook.bookImageIsBase64String, serverBook.characters, serverBook.series);
                 }
                 _this.loading = false;
             });
@@ -70105,7 +70112,7 @@ var BooksComponent = (function () {
                 if (resultJson.success) {
                     _this.books = [];
                     result.json().result.forEach(function (serverBook) {
-                        _this.books.push(new __WEBPACK_IMPORTED_MODULE_2__models_Book__["b" /* Book */](serverBook.bookOrdinal, serverBook.bookName, serverBook.bookIsbn10, serverBook.bookIsbn13, serverBook.bookDescription, serverBook.bookCoverImageUrl, serverBook.characters, serverBook.series));
+                        _this.books.push(new __WEBPACK_IMPORTED_MODULE_2__models_Book__["b" /* Book */](serverBook.bookOrdinal, serverBook.bookName, serverBook.bookIsbn10, serverBook.bookIsbn13, serverBook.bookDescription, serverBook.bookCoverImage, serverBook.bookImageIsBase64String, serverBook.characters, serverBook.series));
                     });
                 }
                 _this.success = resultJson.success;
@@ -70312,11 +70319,10 @@ var SeriesProfileComponent = (function () {
             var route = _this.baseApiUrl + "/" + _this.seriesId;
             _this.http.get(route).subscribe(function (result) {
                 var resultJson = result.json();
-                debugger;
                 if (resultJson.success) {
                     _this.books = [];
                     result.json().result.forEach(function (serverBook) {
-                        _this.books.push(new __WEBPACK_IMPORTED_MODULE_3__models_Book__["a" /* BookBaseViewModel */](serverBook.bookDescription, serverBook.bookCoverImageUrl));
+                        _this.books.push(new __WEBPACK_IMPORTED_MODULE_3__models_Book__["a" /* BookBaseViewModel */](serverBook.bookDescription, serverBook.bookCoverImage, serverBook.bookImageIsBase64String));
                     });
                 }
                 _this.success = resultJson.success;
@@ -70760,13 +70766,13 @@ module.exports = "<div class='container-fluid'>\r\n    <div class='row'>\r\n    
 /* 67 */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, please wait</p>\n</div>\n\n<div class=\"row\" *ngIf=\"!loading && success && book\">\n    <div class=\"col-xs-12\">\n        <h1>{{ book.bookName }}</h1>\n    </div>\n    \n    <div class=\"row\">\n        <div class=\"col-xs-3\">\n            <img src=\"{{book.bookCoverImageUrl}}\" class=\"img-responsive\"/>\n        </div>\n        <div class=\"col-xs-9\">\n            <p>{{ book.bookDescription }}</p>\n        </div>\n    </div>\n    \n    <div class=\"row\">\n        <div class=\"col-xs-12\">\n            <div class=\"table-responsive\">\n                <table class=\"table\">\n                    <thead>\n                    <tr>\n                        <th>ISBN 10</th>\n                        <th>ISBN 13</th>\n                        <th>Series</th>\n                        <th>Characters</th>\n                    </tr>\n                    </thead>\n                    <tbody>\n                    <tr>\n                        <td>{{ book.bookIsbn10 }}</td>\n                        <td>{{ book.bookIsbn13 }}</td>\n                        <td>{{ book.seriesAsString() }}</td>\n                        <td>\n                            <span [innerHTML]=\"book.charactersWithLineBreaks()\"></span>\n                        </td>\n                    </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n    </div>\n</div>";
+module.exports = "<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, please wait</p>\n</div>\n\n<div class=\"row\" *ngIf=\"!loading && success && book\">\n    <div class=\"col-xs-12\">\n        <h1>{{ book.bookName }}</h1>\n    </div>\n    \n    <div class=\"row\">\n        <div class=\"col-xs-3\">\n            <img src=\"{{ book.imageTag() }}\" class=\"img-responsive\"/>\n        </div>\n        <div class=\"col-xs-9\">\n            <p>{{ book.bookDescription }}</p>\n        </div>\n    </div>\n    \n    <div class=\"row\">\n        <div class=\"col-xs-12\">\n            <div class=\"table-responsive\">\n                <table class=\"table\">\n                    <thead>\n                    <tr>\n                        <th>ISBN 10</th>\n                        <th>ISBN 13</th>\n                        <th>Series</th>\n                        <th>Characters</th>\n                    </tr>\n                    </thead>\n                    <tbody>\n                    <tr>\n                        <td>{{ book.bookIsbn10 }}</td>\n                        <td>{{ book.bookIsbn13 }}</td>\n                        <td>{{ book.seriesAsString() }}</td>\n                        <td>\n                            <span [innerHTML]=\"book.charactersWithLineBreaks()\"></span>\n                        </td>\n                    </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n    </div>\n</div>";
 
 /***/ }),
 /* 68 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Book Search</h1>\n\n<div class=\"row\">\n    <div class=\"col-xs-4\">\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\" (keyup.enter)=\"getDwBook()\"/>\n        <button (click)=\"getDwBook()\">Search</button>\n    </div>\n    <div class=\"col-xs-3\">\n        <label for=\"displayCharacterCheckbox\">Display Characters</label>\n        <input id=\"displayCharacterCheckbox\" type=\"checkbox\" [checked]=\"displayCharacters\" (change)=\"displayCharacters = !displayCharacters\"/>\n    </div>\n\n    <div class=\"col-xs-3\">\n        <label for=\"displaySeriesCheckBox\" >Display Series</label>\n        <input id=\"displaySeriesCheckBox\" type=\"checkbox\" [checked]=\"displaySeries\" (change)=\"displaySeries = !displaySeries\"/>\n    </div>\n</div>\n\n<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, please wait</p>\n</div>\n\n<div class=\"table-responsive\" *ngIf=\"!loading && success && books\">\n    <table class='table'>\n        <thead>\n        <tr>\n            <th colspan=\"2\">Cover</th>\n            <th colspan=\"2\">Name</th>\n            <th>ISBN 10</th>\n            <th>ISBN 13</th>\n            <th>Description</th>\n            \n            <th *ngIf=\"displayCharacters\">Characters</th>\n            <th *ngIf=\"displaySeries\">Series</th>\n        </tr>\n        </thead>\n        <tbody>\n        <tr *ngFor=\"let book of books\">\n            <td colspan=\"2\"><img src=\"{{book.bookCoverImageUrl}}\" class=\"img-responsive\"/></td>\n            <td colspan=\"2\">\n                <a [routerLink]=\"['/bookProfile', book.bookOrdinal]\">\n                {{ book.bookName }}\n                </a>\n            </td>\n            <td>{{ book.bookIsbn10 }}</td>\n            <td>{{ book.bookIsbn13 }}</td>\n            <td>{{ book.bookDescription }}</td>\n            \n            <td *ngIf=\"displayCharacters\">{{ book.charactersAsString() }}</td>\n            <td *ngIf=\"displaySeries\">{{ book.seriesAsString() }}</td>\n        </tr>\n        </tbody>\n    </table>\n</div>\n\n<div class=\"row\" *ngIf=\"!loading && !success\">\n    <div class=\"col-xs-12\">\n        No results found\n    </div>\n</div>";
+module.exports = "<h1>Book Search</h1>\n\n<div class=\"row\">\n    <div class=\"col-xs-4\">\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\" (keyup.enter)=\"getDwBook()\"/>\n        <button (click)=\"getDwBook()\">Search</button>\n    </div>\n    <div class=\"col-xs-3\">\n        <label for=\"displayCharacterCheckbox\">Display Characters</label>\n        <input id=\"displayCharacterCheckbox\" type=\"checkbox\" [checked]=\"displayCharacters\" (change)=\"displayCharacters = !displayCharacters\"/>\n    </div>\n\n    <div class=\"col-xs-3\">\n        <label for=\"displaySeriesCheckBox\" >Display Series</label>\n        <input id=\"displaySeriesCheckBox\" type=\"checkbox\" [checked]=\"displaySeries\" (change)=\"displaySeries = !displaySeries\"/>\n    </div>\n</div>\n\n<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, please wait</p>\n</div>\n\n<div class=\"table-responsive\" *ngIf=\"!loading && success && books\">\n    <table class='table'>\n        <thead>\n        <tr>\n            <th colspan=\"2\">Cover</th>\n            <th colspan=\"2\">Name</th>\n            <th>ISBN 10</th>\n            <th>ISBN 13</th>\n            <th>Description</th>\n            \n            <th *ngIf=\"displayCharacters\">Characters</th>\n            <th *ngIf=\"displaySeries\">Series</th>\n        </tr>\n        </thead>\n        <tbody>\n        <tr *ngFor=\"let book of books\">\n            <td colspan=\"2\">\n                <img src=\"{{ book.imageTag() }}\" class=\"img-responsive\"/>\n            </td>\n            <td colspan=\"2\">\n                <a [routerLink]=\"['/bookProfile', book.bookOrdinal]\">\n                {{ book.bookName }}\n                </a>\n            </td>\n            <td>{{ book.bookIsbn10 }}</td>\n            <td>{{ book.bookIsbn13 }}</td>\n            <td>{{ book.bookDescription }}</td>\n            \n            <td *ngIf=\"displayCharacters\">{{ book.charactersAsString() }}</td>\n            <td *ngIf=\"displaySeries\">{{ book.seriesAsString() }}</td>\n        </tr>\n        </tbody>\n    </table>\n</div>\n\n<div class=\"row\" *ngIf=\"!loading && !success\">\n    <div class=\"col-xs-12\">\n        No results found\n    </div>\n</div>";
 
 /***/ }),
 /* 69 */
@@ -70790,7 +70796,7 @@ module.exports = "<h1>Series Search</h1>\n<div class=\"row\">\n    <div class=\"
 /* 72 */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, please wait</p>\n</div>\n\n<div *ngIf=\"!loading && success && books\">\n    <div class=\"row\" *ngFor=\"let book of books\">\n        <div class=\"col-xs-12\">\n            <h1>{{ book.bookName }}</h1>\n        </div>\n    \n        <div class=\"row\">\n            <div class=\"col-xs-3\">\n                <img src=\"{{book.bookCoverImageUrl}}\" class=\"img-responsive\"/>\n            </div>\n            <div class=\"col-xs-9\">\n                <p>{{ book.bookDescription }}</p>\n            </div>\n        </div>\n        <hr />\n    </div>\n    \n    <hr />\n</div>";
+module.exports = "<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, please wait</p>\n</div>\n\n<div *ngIf=\"!loading && success && books\">\n    <div class=\"row\" *ngFor=\"let book of books\">\n        <div class=\"col-xs-12\">\n            <h1>{{ book.bookName }}</h1>\n        </div>\n    \n        <div class=\"row\">\n            <div class=\"col-xs-3\">\n                <img src=\"{{ book.imageTag() }}\" class=\"img-responsive\"/>\n            </div>\n            <div class=\"col-xs-9\">\n                <p>{{ book.bookDescription }}</p>\n            </div>\n        </div>\n        <hr />\n    </div>\n    \n    <hr />\n</div>";
 
 /***/ }),
 /* 73 */
