@@ -11,6 +11,7 @@ import { BooksComponent } from './components/books/books.component';
 import { CharacterComponent} from "./components/characters/characters.component";
 import { SeriesComponent } from "./components/series/series.component";
 import { BookProfileComponent } from "./components/bookProfile/bookProfile.component";
+import { SeriesProfileComponent} from "./components/seriesProfile/seriesProfile.component";
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { BookProfileComponent } from "./components/bookProfile/bookProfile.compo
         BooksComponent,
         CharacterComponent,
         SeriesComponent,
-        BookProfileComponent
+        BookProfileComponent,
+        SeriesProfileComponent
     ],
     imports: [
         CommonModule,
@@ -33,6 +35,7 @@ import { BookProfileComponent } from "./components/bookProfile/bookProfile.compo
             { path: 'characters', component: CharacterComponent },
             { path: 'series', component: SeriesComponent },
             { path: 'bookProfile/:id' , component: BookProfileComponent },
+            { path: 'seriesProfile/:id', component: SeriesProfileComponent },
             { path: '**', redirectTo: 'about' }
         ])
     ]

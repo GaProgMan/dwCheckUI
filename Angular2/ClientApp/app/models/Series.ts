@@ -1,10 +1,12 @@
 export class Series {
-    constructor(seriesName: string, books: string[]){
+    constructor(seriesId: number,  seriesName: string, books: string[]) {
+        this.seriesId = seriesId;
         this.seriesName = seriesName;
         this.books = books;
         
         this.registerFunctions();
     }
+    seriesId: number;
     seriesName: string;
     books: string[];
     booksAsString: () => string;
