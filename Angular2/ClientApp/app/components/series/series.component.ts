@@ -38,7 +38,7 @@ export class SeriesComponent {
                 if(resultJson.success) {
                     this.series = [];
                     result.json().result.forEach((series:ApiSeries) => {
-                        this.series.push(new Series(series.seriesName, series.bookNames));
+                        this.series.push(new Series(series.seriesId, series.seriesName, series.bookNames));
                     });
                 }
                 this.success = resultJson.success;
@@ -48,7 +48,8 @@ export class SeriesComponent {
     }
 }
 
-interface ApiSeries{
+interface ApiSeries {
+    seriesId: number;
     seriesName: string;
     bookNames: string[];
 }

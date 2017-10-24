@@ -1,0 +1,23 @@
+<div class="loader" *ngIf="loading">
+    <p>Searching, please wait</p>
+</div>
+
+<div *ngIf="!loading && success && books">
+    <div class="row" *ngFor="let book of books">
+        <div class="col-xs-12">
+            <h1>{{ book.bookName }}</h1>
+        </div>
+    
+        <div class="row">
+            <div class="col-xs-3">
+                <img src="{{book.bookCoverImageUrl}}" class="img-responsive"/>
+            </div>
+            <div class="col-xs-9">
+                <p>{{ book.bookDescription }}</p>
+            </div>
+        </div>
+        <hr />
+    </div>
+    
+    <hr />
+</div>
