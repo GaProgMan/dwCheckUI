@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "edba26bab819827125c8"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "714d0caee69f7dd6b8e0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -70098,8 +70098,6 @@ var BooksComponent = (function () {
         this.success = true;
         this.baseApiUrl = 'http://dwcheckapi.azurewebsites.net/Books/Search?searchString=';
         this.books = [];
-        this.displayCharacters = false;
-        this.displaySeries = false;
         this.registerFunctions();
     }
     BooksComponent.prototype.registerFunctions = function () {
@@ -70772,7 +70770,7 @@ module.exports = "<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, pl
 /* 68 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Book Search</h1>\n\n<div class=\"row\">\n    <div class=\"col-xs-4\">\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\" (keyup.enter)=\"getDwBook()\"/>\n        <button (click)=\"getDwBook()\">Search</button>\n    </div>\n    <div class=\"col-xs-3\">\n        <label for=\"displayCharacterCheckbox\">Display Characters</label>\n        <input id=\"displayCharacterCheckbox\" type=\"checkbox\" [checked]=\"displayCharacters\" (change)=\"displayCharacters = !displayCharacters\"/>\n    </div>\n\n    <div class=\"col-xs-3\">\n        <label for=\"displaySeriesCheckBox\" >Display Series</label>\n        <input id=\"displaySeriesCheckBox\" type=\"checkbox\" [checked]=\"displaySeries\" (change)=\"displaySeries = !displaySeries\"/>\n    </div>\n</div>\n\n<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, please wait</p>\n</div>\n\n<div class=\"table-responsive\" *ngIf=\"!loading && success && books\">\n    <table class='table'>\n        <thead>\n        <tr>\n            <th colspan=\"2\">Cover</th>\n            <th colspan=\"2\">Name</th>\n            <th>ISBN 10</th>\n            <th>ISBN 13</th>\n            <th>Description</th>\n            \n            <th *ngIf=\"displayCharacters\">Characters</th>\n            <th *ngIf=\"displaySeries\">Series</th>\n        </tr>\n        </thead>\n        <tbody>\n        <tr *ngFor=\"let book of books\">\n            <td colspan=\"2\">\n                <img src=\"{{ book.imageTag() }}\" class=\"img-responsive\"/>\n            </td>\n            <td colspan=\"2\">\n                <a [routerLink]=\"['/bookProfile', book.bookOrdinal]\">\n                {{ book.bookName }}\n                </a>\n            </td>\n            <td>{{ book.bookIsbn10 }}</td>\n            <td>{{ book.bookIsbn13 }}</td>\n            <td>{{ book.bookDescription }}</td>\n            \n            <td *ngIf=\"displayCharacters\">{{ book.charactersAsString() }}</td>\n            <td *ngIf=\"displaySeries\">{{ book.seriesAsString() }}</td>\n        </tr>\n        </tbody>\n    </table>\n</div>\n\n<div class=\"row\" *ngIf=\"!loading && !success\">\n    <div class=\"col-xs-12\">\n        No results found\n    </div>\n</div>";
+module.exports = "<h1>Book Search</h1>\n\n<div class=\"row\">\n    <div class=\"col-xs-4\">\n        <input [value]=\"searchString\" (input)=\"searchString = $event.target.value\" (keyup.enter)=\"getDwBook()\"/>\n        <button (click)=\"getDwBook()\">Search</button>\n    </div>\n</div>\n\n<div class=\"loader\" *ngIf=\"loading\">\n    <p>Searching, please wait</p>\n</div>\n\n<div class=\"table-responsive\" *ngIf=\"!loading && success && books\">\n    <table class='table'>\n        <thead>\n        <tr>\n            <th colspan=\"2\">Cover</th>\n            <th colspan=\"2\">Name</th>\n            <th>ISBN 10</th>\n            <th>ISBN 13</th>\n            <th>Description</th>\n            \n            <th *ngIf=\"displayCharacters\">Characters</th>\n            <th *ngIf=\"displaySeries\">Series</th>\n        </tr>\n        </thead>\n        <tbody>\n        <tr *ngFor=\"let book of books\">\n            <td colspan=\"2\">\n                <img src=\"{{ book.imageTag() }}\" class=\"img-responsive\"/>\n            </td>\n            <td colspan=\"2\">\n                <a [routerLink]=\"['/bookProfile', book.bookOrdinal]\">\n                {{ book.bookName }}\n                </a>\n            </td>\n            <td>{{ book.bookIsbn10 }}</td>\n            <td>{{ book.bookIsbn13 }}</td>\n            <td>{{ book.bookDescription }}</td>\n        </tr>\n        </tbody>\n    </table>\n</div>\n\n<div class=\"row\" *ngIf=\"!loading && !success\">\n    <div class=\"col-xs-12\">\n        No results found\n    </div>\n</div>";
 
 /***/ }),
 /* 69 */

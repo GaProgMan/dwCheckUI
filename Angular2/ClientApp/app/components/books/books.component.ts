@@ -17,9 +17,6 @@ export class BooksComponent {
         this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/Books/Search?searchString=';
         this.books = [];
         
-        this.displayCharacters = false;
-        this.displaySeries = false;
-        
         this.registerFunctions();
     }
     
@@ -31,9 +28,6 @@ export class BooksComponent {
     baseApiUrl: string;
     searchString = '';
     books: Book[];
-
-    displayCharacters: boolean;
-    displaySeries: boolean;
 
     getDwBook: () => void;
 
