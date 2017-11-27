@@ -257,3 +257,8 @@ paket-files/
 
 ClientApp/dist/
 wwwroot/dist/
+Angular2/ClientApp/dist/vendor-manifest\.json
+
+Angular2/wwwroot/dist/vendor-manifest\.json
+
+Angular2/wwwroot/dist/vendor\.js
