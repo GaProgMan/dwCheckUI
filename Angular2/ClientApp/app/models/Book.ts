@@ -1,26 +1,30 @@
+import { ImageViewModel } from "./Image";
+
 export class BookBaseViewModel {
-    constructor(bookDescription: string, bookCoverImage: string, bookImageBase64: boolean) {
+    constructor(bookId: number, bookDescription: string) {
+        this.bookId = bookId;
         this.bookDescription = bookDescription;
-        this.bookCoverImage = bookCoverImage;
-        this.bookImageIsBase64 = bookImageBase64;
     }
 
+    bookId: number;
     bookDescription: string;
-    bookCoverImage: string;
-    bookImageIsBase64: boolean;
+    coverData: ImageViewModel;
 
-    imageTag = (): string =>{
-        return this.bookImageIsBase64
-        ? `data:image/png;base64,${this.bookCoverImage}`
-        : `${this.bookCoverImage}`;
+    imageTag = (): string => {
+        return this.coverData
+            ? this.coverData.imageIsBase64
+                ? `data:image/png;base64,${this.coverData.coverImage}`
+                : `${this.coverData}`
+            : '/images/loading-spinner.gif';
     }
 }
 
 export class Book extends BookBaseViewModel {
-    constructor(bookOrdinal: number, bookName: string, bookIsbn10: string,
-                bookIsbn13: string,  bookDescription: string, bookCoverImage: string,
-                bookCoverIsBase64: boolean, characters: string[], series: string[]) {
-        super(bookDescription, bookCoverImage, bookCoverIsBase64);
+    constructor(bookId: number, bookOrdinal: number, bookName: string, bookIsbn10: string,
+                bookIsbn13: string,  bookDescription: string, characters: string[],
+                series: string[]) {
+        
+        super(bookId, bookDescription);
         
         this.bookOrdinal = bookOrdinal;
         this.bookName = bookName;
@@ -37,14 +41,13 @@ export class Book extends BookBaseViewModel {
     bookIsbn10: string;
     bookIsbn13: string;
     bookDescription: string;
-    bookCoverImageUrl: string;
     characters: string[];
     series: string[];
     
     charactersAsString: () => string;
     seriesAsString: () => string;
-    
     charactersWithLineBreaks: () => string;
+    getImageData: () => void;
     
     registerFunctions = () =>  {
         this.charactersAsString = () => {
