@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { Book } from "../../models/Book";
+import { ImageViewModel} from "../../models/Image";
 
 @Component({
     selector: 'bookProfile',
@@ -11,6 +12,7 @@ import { Book } from "../../models/Book";
 
 export class BookProfileComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute, public http: Http) {
+        this.registerFunctions();
     }
     
     bookOrdinal: number;
@@ -20,23 +22,26 @@ export class BookProfileComponent implements OnInit, OnDestroy {
     baseApiUrl = 'http://dwcheckapi.azurewebsites.net/Books/Get';
     
     private subscription: any;
+    private getBookImageData: () => void;
     
     ngOnInit() {
         this.subscription = this.route.params.subscribe(params =>
         {
             this.bookOrdinal = +params['id']; // the + here converts a string to a number
             
-            var route = `${this.baseApiUrl}/${this.bookOrdinal}`;
+            let route = `${this.baseApiUrl}/${this.bookOrdinal}`;
 
             this.http.get(route).subscribe((result) => {
-                var resultJson = result.json() as ResultJson;
+                let resultJson = result.json() as ResultJson;
                 if (resultJson.success) {
-                    var serverBook = result.json().result;
-                    this.book = new Book(serverBook.bookOrdinal, serverBook.bookName,
+                    let serverBook = result.json().result;
+                    this.book = new Book(serverBook.bookId,
+                        serverBook.bookOrdinal, serverBook.bookName,
                         serverBook.bookIsbn10, serverBook.bookIsbn13,
-                        serverBook.bookDescription, serverBook.bookCoverImage,
-                        serverBook.bookImageIsBase64String,
-                        serverBook.characters, serverBook.series);
+                        serverBook.bookDescription, serverBook.characters,
+                        serverBook.series);
+                    
+                    this.getBookImageData();
                 }
                 this.loading = false;
             });
@@ -46,6 +51,21 @@ export class BookProfileComponent implements OnInit, OnDestroy {
     
     ngOnDestroy() {
         this.subscription.unsubscribe();
+    }
+    
+    registerFunctions = () => {
+        this.getBookImageData =() => {
+            let route = `http://dwcheckapi.azurewebsites.net/Books/GetBookCover/${this.book.bookId}`;
+            this.http.get(route).subscribe((result) => {
+                let resultJson = result.json() as ResultJson;
+                if (resultJson.success) {
+                    let serverData = result.json().result;
+                    this.book.coverData = new ImageViewModel(
+                        serverData.bookCoverImage, serverData.bookImageIsBase64String
+                    );
+                }
+            });
+        }
     }
 }
 

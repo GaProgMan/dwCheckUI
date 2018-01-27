@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { Book } from "../../models/Book";
+import {ImageViewModel} from "../../models/Image";
 
 @Component({
     selector: 'books',
@@ -30,6 +31,7 @@ export class BooksComponent {
     books: Book[];
 
     getDwBook: () => void;
+    private getBookImageData: (book: Book) => void;
 
     private registerFunctions() {
         this.getDwBook = () => {
@@ -40,23 +42,38 @@ export class BooksComponent {
                 if(resultJson.success) {
                     this.books = [];
                     result.json().result.forEach((serverBook: ApiBook) => {
-                        this.books.push(
-                            new Book(serverBook.bookOrdinal, serverBook.bookName,
+                        let newBook = new Book(serverBook.bookId,
+                                serverBook.bookOrdinal, serverBook.bookName,
                                 serverBook.bookIsbn10, serverBook.bookIsbn13,
-                                serverBook.bookDescription, serverBook.bookCoverImage,
-                                serverBook.bookImageIsBase64String,
-                                serverBook.characters, serverBook.series)
-                        );
+                                serverBook.bookDescription,
+                                serverBook.characters, serverBook.series);
+                        this.getBookImageData(newBook);
+                        this.books.push(newBook);
                     });
                 }
                 this.success = resultJson.success;
                 this.loading = false;
+            });
+        };
+
+        this.getBookImageData = (book: Book) => {
+            let route = `http://dwcheckapi.azurewebsites.net/Books/GetBookCover/${book.bookId}`;
+            this.http.get(route).subscribe((result) => {
+                let resultJson = result.json() as ResultJson;
+                if (resultJson.success) {
+                    let serverData = result.json().result;
+                    debugger;
+                    book.coverData = new ImageViewModel(
+                        serverData.bookCoverImage, serverData.bookImageIsBase64String
+                    );
+                }
             });
         }
     }
 }
 
 interface ApiBook {
+    bookId: number;
     bookOrdinal: number;
     bookCoverImage: string;
     bookImageIsBase64String: boolean;

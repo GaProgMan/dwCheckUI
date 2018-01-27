@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { BookBaseViewModel } from "../../models/Book";
+import {ImageViewModel} from "../../models/Image";
 
 @Component({
     selector: 'seriesProfile',
@@ -33,9 +34,12 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
                 if (resultJson.success) {
                     this.books = [];
                     result.json().result.forEach((serverBook: ApiBookBaseViewModel) => {
-                        this.books.push(
-                            new BookBaseViewModel(serverBook.bookDescription,
-                                serverBook.bookCoverImage, serverBook.bookImageIsBase64String));
+                        let newData = new BookBaseViewModel(serverBook.bookId,
+                            serverBook.bookDescription);
+                        newData.coverData = new ImageViewModel(
+                            serverBook.bookCoverImage, serverBook.bookImageIsBase64String
+                        );
+                        this.books.push(newData);
                     });
                 }
                 this.success = resultJson.success;
@@ -48,9 +52,11 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
+    
 }
 
 interface ApiBookBaseViewModel {
+    bookId: number;
     bookCoverImage: string;
     bookImageIsBase64String: boolean;
     bookDescription: string;
