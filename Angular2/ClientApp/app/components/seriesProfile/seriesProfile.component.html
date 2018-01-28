@@ -4,15 +4,14 @@
 
 <div *ngIf="!loading && success && hasBooks">
     <div class="row" *ngFor="let book of books">
-        <div class="col-xs-12">
-            <h1>{{ book.bookName }}</h1>
-        </div>
-    
         <div class="row">
             <div class="col-xs-3">
                 <img src="{{ book.imageTag() }}" class="img-responsive"/>
             </div>
             <div class="col-xs-9">
+                <h2>
+                    <a [routerLink]="['/bookProfile', book.bookOrdinal]">{{ book.bookName }}</a>
+                </h2>
                 <p>{{ book.bookDescription }}</p>
             </div>
         </div>

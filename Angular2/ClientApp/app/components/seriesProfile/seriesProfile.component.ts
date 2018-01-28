@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { BookBaseViewModel } from "../../models/Book";
-import {ImageViewModel} from "../../models/Image";
+import { ImageViewModel } from "../../models/Image";
 
 @Component({
     selector: 'seriesProfile',
@@ -21,7 +21,6 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
     hasBooks = false;
     books: BookBaseViewModel[];
     
-    
     private subscription: any;
 
     ngOnInit() {
@@ -36,10 +35,9 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
                     this.books = [];
                     result.json().result.forEach((serverBook: ApiBookBaseViewModel) => {
                         let newData = new BookBaseViewModel(serverBook.bookId,
-                            serverBook.bookDescription);
-                        newData.coverData = new ImageViewModel(
-                            serverBook.bookCoverImage, serverBook.bookImageIsBase64String
-                        );
+                            serverBook.bookDescription, serverBook.bookName,
+                            serverBook.bookOrdinal);
+                        this.getBookImageData(newData);
                         this.books.push(newData);
                     });
                 }
@@ -51,15 +49,29 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
         });
     }
 
-
     ngOnDestroy() {
         this.subscription.unsubscribe();
+    }
+
+    private getBookImageData = (book: BookBaseViewModel) => {
+        let route = `http://dwcheckapi.azurewebsites.net/Books/GetBookCover/${book.bookId}`;
+        this.http.get(route).subscribe((result) => {
+            let resultJson = result.json() as ResultJson;
+            if (resultJson.success) {
+                let serverData = result.json().result;
+                book.coverData = new ImageViewModel(
+                    serverData.bookCoverImage, serverData.bookImageIsBase64String
+                );
+            }
+        });
     }
     
 }
 
 interface ApiBookBaseViewModel {
     bookId: number;
+    bookOrdinal: number;
+    bookName: string;
     bookCoverImage: string;
     bookImageIsBase64String: boolean;
     bookDescription: string;
