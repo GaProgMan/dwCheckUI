@@ -24,6 +24,7 @@ export class SeriesComponent {
     loading: boolean;
     baseApiUrl: string;
     searchString = '';
+    hasSeries = false;
     series: Series[];
 
     // public functions
@@ -41,10 +42,12 @@ export class SeriesComponent {
                         this.series.push(new Series(series.seriesId, series.seriesName, series.bookNames));
                     });
                 }
+                
+                this.hasSeries = this.series && this.series.length > 0;
                 this.success = resultJson.success;
                 this.loading = false;
             });
-        }
+        };
     }
 }
 

@@ -28,9 +28,12 @@ export class BooksComponent {
     loading: boolean;
     baseApiUrl: string;
     searchString = '';
+    hasBooks = false;
     books: Book[];
-
+    
     getDwBook: () => void;
+    
+    
     private getBookImageData: (book: Book) => void;
 
     private registerFunctions() {
@@ -51,6 +54,8 @@ export class BooksComponent {
                         this.books.push(newBook);
                     });
                 }
+                
+                this.hasBooks = this.books && this.books.length > 0;
                 this.success = resultJson.success;
                 this.loading = false;
             });
@@ -68,7 +73,7 @@ export class BooksComponent {
                     );
                 }
             });
-        }
+        };
     }
 }
 

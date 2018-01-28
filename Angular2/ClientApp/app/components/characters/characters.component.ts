@@ -24,6 +24,7 @@ export class CharacterComponent {
     success: boolean;
     baseApiUrl: string;
     searchString = '';
+    hasCharacters = false;
     characters: Character[];
 
     // public functions
@@ -41,10 +42,12 @@ export class CharacterComponent {
                         this.characters.push(new Character(character.characterName,  character.books));
                     });
                 }
+                
+                this.hasCharacters = this.characters && this.characters.length > 0;
                 this.success = resultJson.success;
                 this.loading = false;
             });
-        }
+        };
     }
 }
 

@@ -18,6 +18,7 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
     success = true;
     baseApiUrl = 'http://dwcheckapi.azurewebsites.net/Books/Series';
     seriesId: number;
+    hasBooks = false;
     books: BookBaseViewModel[];
     
     
@@ -42,6 +43,8 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
                         this.books.push(newData);
                     });
                 }
+                
+                this.hasBooks = this.books && this.books.length > 0; 
                 this.success = resultJson.success;
                 this.loading = false;
             });

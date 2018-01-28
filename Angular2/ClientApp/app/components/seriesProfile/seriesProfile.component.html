@@ -2,7 +2,7 @@
     <p>Searching, please wait</p>
 </div>
 
-<div *ngIf="!loading && success && books">
+<div *ngIf="!loading && success && hasBooks">
     <div class="row" *ngFor="let book of books">
         <div class="col-xs-12">
             <h1>{{ book.bookName }}</h1>

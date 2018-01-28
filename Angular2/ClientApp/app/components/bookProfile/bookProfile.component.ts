@@ -20,6 +20,7 @@ export class BookProfileComponent implements OnInit, OnDestroy {
     loading = false;
     success = true;
     baseApiUrl = 'http://dwcheckapi.azurewebsites.net/Books/Get';
+    bookFound = false;
     
     private subscription: any;
     private getBookImageData: () => void;
@@ -43,6 +44,8 @@ export class BookProfileComponent implements OnInit, OnDestroy {
                     
                     this.getBookImageData();
                 }
+                
+                this.bookFound = this.book != null;
                 this.loading = false;
             });
         });
