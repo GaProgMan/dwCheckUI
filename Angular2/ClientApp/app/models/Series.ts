@@ -14,7 +14,7 @@ export class Series {
     registerFunctions =() => {
         this.booksAsString = (): string =>{
             return this.books.length > 0
-                ? this.books.join(',')
+                ? this.books.join(', ')
                 : '';
         }
     }
