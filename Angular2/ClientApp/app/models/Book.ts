@@ -26,13 +26,20 @@ export class BookBaseViewModel {
 export class Book extends BookBaseViewModel {
     constructor(bookId: number, bookOrdinal: number, bookName: string, bookIsbn10: string,
                 bookIsbn13: string,  bookDescription: string, characters: string[],
-                series: string[]) {
+                series: { [key: number]: string }) {
         super(bookId, bookDescription, bookName, bookOrdinal);
         
         this.bookIsbn10 = bookIsbn10;
         this.bookIsbn13 = bookIsbn13;
         this.characters = characters;
-        this.series = series;
+
+        if (series) {
+            this.series = [];
+            for (let key in series) {
+                let value = series[key];
+                this.series.push(new SeriesBaseViewModel(key, value));
+            }
+        }
         
         this.registerFunctions();
     }
@@ -43,10 +50,10 @@ export class Book extends BookBaseViewModel {
     bookIsbn13: string;
     bookDescription: string;
     characters: string[];
-    series: string[];
+    series: SeriesBaseViewModel[];
     
     charactersAsString: () => string;
-    seriesAsString: () => string;
+    seriesWithLineBreaksAndAnchors: () =>string;
     charactersWithLineBreaks: () => string;
     getImageData: () => void;
     
@@ -57,10 +64,18 @@ export class Book extends BookBaseViewModel {
                 : '';
         };
         
-        this.seriesAsString = () => {
-          return this.series.length > 0
-              ? this.series.join(',')
-              : ''; 
+        this.seriesWithLineBreaksAndAnchors = () => {
+            if (this.series.length == 0) {
+                return '';
+            }
+            
+            let returnString = '';
+            for(let index = 0; index < this.series.length; index++) {
+                let seriesRecord = this.series[index];
+                returnString +=
+                    `<a href='/seriesProfile/${seriesRecord.seriesId}'>${seriesRecord.seriesName}</a>`;
+            }
+            return returnString;
         };
         
         this.charactersWithLineBreaks = () =>  {
@@ -69,4 +84,13 @@ export class Book extends BookBaseViewModel {
                 : '';
         };
     }
+}
+
+export class SeriesBaseViewModel {
+    constructor(seriesId: string,  seriesName: string) {
+        this.seriesId = seriesId;
+        this.seriesName = seriesName;
+    }
+    seriesId: string;
+    seriesName: string;
 }

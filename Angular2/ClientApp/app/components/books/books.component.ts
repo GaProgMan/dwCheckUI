@@ -85,5 +85,5 @@ interface ApiBook {
     bookIsbn13: string;
     bookName: string;
     characters: string[];
-    series: string[];
+    series: { [key: number]: string };
 }

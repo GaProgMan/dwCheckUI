@@ -32,7 +32,9 @@
                     <tr>
                         <td>{{ book.bookIsbn10 }}</td>
                         <td>{{ book.bookIsbn13 }}</td>
-                        <td>{{ book.seriesAsString() }}</td>
+                        <td>
+                            <span [innerHTML]="book.seriesWithLineBreaksAndAnchors()"></span>
+                        </td>
                         <td>
                             <span [innerHTML]="book.charactersWithLineBreaks()"></span>
                         </td>
