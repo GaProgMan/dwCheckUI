@@ -33,7 +33,6 @@ export class BooksComponent {
     
     getDwBook: () => void;
     
-    
     private getBookImageData: (book: Book) => void;
 
     private registerFunctions() {
@@ -67,7 +66,6 @@ export class BooksComponent {
                 let resultJson = result.json() as ResultJson;
                 if (resultJson.success) {
                     let serverData = result.json().result;
-                    debugger;
                     book.coverData = new ImageViewModel(
                         serverData.bookCoverImage, serverData.bookImageIsBase64String
                     );
