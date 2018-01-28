@@ -52,17 +52,10 @@ export class Book extends BookBaseViewModel {
     characters: string[];
     series: SeriesBaseViewModel[];
     
-    charactersAsString: () => string;
     seriesWithLineBreaksAndAnchors: () =>string;
     charactersWithLineBreaks: () => string;
-    getImageData: () => void;
     
     registerFunctions = () =>  {
-        this.charactersAsString = () => {
-            return this.characters.length > 0
-                ? this.characters.join(',')
-                : '';
-        };
         
         this.seriesWithLineBreaksAndAnchors = () => {
             if (this.series.length == 0) {
