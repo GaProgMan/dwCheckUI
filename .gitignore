@@ -255,8 +255,8 @@ paket-files/
 # Mac OS chaff
 .DS_Store
 
-ClientApp/dist/
-wwwroot/dist/
+ClientApp/dist/*
+wwwroot/dist/*
 Angular2/ClientApp/dist/vendor-manifest\.json
 
 Angular2/wwwroot/dist/vendor-manifest\.json
