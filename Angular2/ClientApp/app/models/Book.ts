@@ -66,7 +66,7 @@ export class Book extends BookBaseViewModel {
             for(let index = 0; index < this.series.length; index++) {
                 let seriesRecord = this.series[index];
                 returnString +=
-                    `<a href='/seriesProfile/${seriesRecord.seriesId}'>${seriesRecord.seriesName}</a>`;
+                    `<a href='/seriesProfile/${seriesRecord.seriesId}'>${seriesRecord.seriesName}</a></br>`;
             }
             return returnString;
         };

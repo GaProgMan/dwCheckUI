@@ -22,7 +22,9 @@
         <tbody>
         <tr *ngFor="let char of characters">
             <td colspan="2">{{ char.characterName }}</td>
-            <td>{{ char.booksAsString() }}</td>
+            <td>
+                <span [innerHTML]="char.booksWithLineBreaksAndAnchors()"></span>
+            </td>
         </tr>
         </tbody>
     </table>

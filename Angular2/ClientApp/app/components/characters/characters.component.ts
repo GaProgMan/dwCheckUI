@@ -39,7 +39,7 @@ export class CharacterComponent {
                 if(resultJson.success) {
                     this.characters = [];
                     result.json().result.forEach((character:ApiCharacter) => {
-                        this.characters.push(new Character(character.characterName,  character.books));
+                        this.characters.push(new Character(character.characterName, character.books));
                     });
                 }
                 
@@ -53,5 +53,5 @@ export class CharacterComponent {
 
 interface ApiCharacter {
     characterName: string;
-    books: string[];
+    books: { [key: number]: string };
 }
