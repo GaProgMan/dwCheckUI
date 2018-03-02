@@ -2,18 +2,21 @@ import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { Series } from "../../models/Series";
+import {BaseComponent} from "../base/base.component";
+import {IApiSeries} from "../../interfaces/ISeries";
 
 @Component({
     selector: 'series',
     templateUrl: './series.component.html'
 })
-export class SeriesComponent {
+export class SeriesComponent extends BaseComponent {
     constructor(http: Http) {
+        super();
+        
         this.http = http;
 
         this.success = true;
         this.loading = false;
-        this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/series/search?searchString=';
         this.registerFunctions();
     }
     // private vars
@@ -32,13 +35,13 @@ export class SeriesComponent {
 
     private registerFunctions() {
         this.getDwSeries = () => {
-            var route = `${this.baseApiUrl}${this.searchString}`;
+            let route = `${this.seriesSearchBaseUrl(this.searchString)}`;
             this.loading = true;
             this.http.get(route).subscribe((result) => {
-                var resultJson = result.json() as ResultJson;
+                let resultJson = result.json() as ResultJson;
                 if(resultJson.success) {
                     this.series = [];
-                    result.json().result.forEach((series:ApiSeries) => {
+                    result.json().result.forEach((series:IApiSeries) => {
                         this.series.push(new Series(series.seriesId, series.seriesName, series.bookNames));
                     });
                 }
@@ -49,10 +52,4 @@ export class SeriesComponent {
             });
         };
     }
-}
-
-interface ApiSeries {
-    seriesId: number;
-    seriesName: string;
-    bookNames: string[];
 }

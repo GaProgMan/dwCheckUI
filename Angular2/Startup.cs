@@ -23,6 +23,14 @@ namespace dwCheckUi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("defaultPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
             services.AddMvc();
         }
 
@@ -41,6 +49,8 @@ namespace dwCheckUi
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseCors("defaultPolicy");
 
             //"Do you not know that a man is not dead while his name is still spoken?"
             app.GnuTerryPratchett();

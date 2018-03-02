@@ -2,18 +2,21 @@ import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { Character } from "../../models/Character";
+import {BaseComponent} from "../base/base.component";
+import {IApiCharacter} from "../../interfaces/ICharacter";
 
 @Component({
     selector: 'characters',
     templateUrl: './characters.component.html'
 })
-export class CharacterComponent {
+export class CharacterComponent extends BaseComponent{
     constructor(http: Http) {
+        super();
+        
         this.http = http;
 
         this.success = true;
         this.loading = false;
-        this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/Characters/Search?searchString=';
         this.registerFunctions();
     }
     // private vars
@@ -32,13 +35,13 @@ export class CharacterComponent {
 
     private registerFunctions() {
         this.getDwCharacter = () => {
-            var route = `${this.baseApiUrl}${this.searchString}`;
+            let route = `${this.characterSearchBaseUrl(this.searchString)}`;
             this.loading = true;
             this.http.get(route).subscribe((result) => {
-                var resultJson = result.json() as ResultJson;
+                let resultJson = result.json() as ResultJson;
                 if(resultJson.success) {
                     this.characters = [];
-                    result.json().result.forEach((character:ApiCharacter) => {
+                    result.json().result.forEach((character:IApiCharacter) => {
                         this.characters.push(new Character(character.characterName, character.books));
                     });
                 }
@@ -51,7 +54,3 @@ export class CharacterComponent {
     }
 }
 
-interface ApiCharacter {
-    characterName: string;
-    books: { [key: number]: string };
-}

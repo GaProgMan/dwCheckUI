@@ -1,17 +1,21 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import {Component, OnInit, OnDestroy, Inject} from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { Book } from "../../models/Book";
 import { ImageViewModel} from "../../models/Image";
+import {BaseComponent} from "../base/base.component";
 
 @Component({
     selector: 'bookProfile',
     templateUrl: './bookProfile.component.html'
 })
 
-export class BookProfileComponent implements OnInit, OnDestroy {
+export class BookProfileComponent extends BaseComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute, public http: Http) {
+        
+        super();
+        
         this.registerFunctions();
     }
     
@@ -19,7 +23,6 @@ export class BookProfileComponent implements OnInit, OnDestroy {
     book: Book;
     loading = false;
     success = true;
-    baseApiUrl = 'http://dwcheckapi.azurewebsites.net/Books/Get';
     bookFound = false;
     
     private subscription: any;
@@ -30,7 +33,7 @@ export class BookProfileComponent implements OnInit, OnDestroy {
         {
             this.bookOrdinal = +params['id']; // the + here converts a string to a number
             
-            let route = `${this.baseApiUrl}/${this.bookOrdinal}`;
+            let route = `${this.bookGetBaseUrl(this.bookOrdinal)}`;
 
             this.http.get(route).subscribe((result) => {
                 let resultJson = result.json() as ResultJson;
@@ -58,7 +61,7 @@ export class BookProfileComponent implements OnInit, OnDestroy {
     
     registerFunctions = () => {
         this.getBookImageData =() => {
-            let route = `http://dwcheckapi.azurewebsites.net/Books/GetBookCover/${this.book.bookId}`;
+            let route = `${this.bookGetCoverUrl(this.book.bookId)}`;
             this.http.get(route).subscribe((result) => {
                 let resultJson = result.json() as ResultJson;
                 if (resultJson.success) {
@@ -70,16 +73,4 @@ export class BookProfileComponent implements OnInit, OnDestroy {
             });
         }
     }
-}
-
-interface ApiBook {
-    bookOrdinal: number;
-    bookCoverImage: string;
-    bookImageIsBase64String: boolean;
-    bookDescription: string;
-    bookIsbn10: string;
-    bookIsbn13: string;
-    bookName: string;
-    characters: string[];
-    series: string[];
 }

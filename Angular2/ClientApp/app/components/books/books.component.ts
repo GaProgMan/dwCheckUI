@@ -3,19 +3,22 @@ import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { Book } from "../../models/Book";
 import {ImageViewModel} from "../../models/Image";
+import {IApiBook} from "../../interfaces/IApiBook";
+import {BaseComponent} from "../base/base.component";
 
 @Component({
     selector: 'books',
     templateUrl: './books.component.html'
 })
 
-export class BooksComponent {
+export class BooksComponent extends BaseComponent {
     constructor(http: Http) {
+        super();
+        
         this.http = http;
 
         this.loading = false;
         this.success = true;
-        this.baseApiUrl =  'http://dwcheckapi.azurewebsites.net/Books/Search?searchString=';
         this.books = [];
         
         this.registerFunctions();
@@ -37,13 +40,13 @@ export class BooksComponent {
 
     private registerFunctions() {
         this.getDwBook = () => {
-            var route = `${this.baseApiUrl}${this.searchString}`;
+            let route = `${this.bookSearchBaseUrl(this.searchString)}`;
             this.loading = true;
             this.http.get(route).subscribe((result) => {
                 var resultJson = result.json() as ResultJson;
                 if(resultJson.success) {
                     this.books = [];
-                    result.json().result.forEach((serverBook: ApiBook) => {
+                    result.json().result.forEach((serverBook: IApiBook) => {
                         let newBook = new Book(serverBook.bookId,
                                 serverBook.bookOrdinal, serverBook.bookName,
                                 serverBook.bookIsbn10, serverBook.bookIsbn13,
@@ -61,7 +64,7 @@ export class BooksComponent {
         };
 
         this.getBookImageData = (book: Book) => {
-            let route = `http://dwcheckapi.azurewebsites.net/Books/GetBookCover/${book.bookId}`;
+            let route = `${this.bookGetCoverUrl(book.bookId)}`;
             this.http.get(route).subscribe((result) => {
                 let resultJson = result.json() as ResultJson;
                 if (resultJson.success) {
@@ -75,15 +78,3 @@ export class BooksComponent {
     }
 }
 
-interface ApiBook {
-    bookId: number;
-    bookOrdinal: number;
-    bookCoverImage: string;
-    bookImageIsBase64String: boolean;
-    bookDescription: string;
-    bookIsbn10: string;
-    bookIsbn13: string;
-    bookName: string;
-    characters: string[];
-    series: { [key: number]: string };
-}

@@ -4,14 +4,17 @@ import { Http } from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { BookBaseViewModel } from "../../models/Book";
 import { ImageViewModel } from "../../models/Image";
+import {BaseComponent} from "../base/base.component";
+import {IApiBookBaseViewModel} from "../../interfaces/IApiBookSeries";
 
 @Component({
     selector: 'seriesProfile',
     templateUrl: './seriesProfile.component.html'
 })
 
-export class SeriesProfileComponent implements OnInit, OnDestroy {
+export class SeriesProfileComponent extends BaseComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute, public http: Http) {
+        super();
     }
 
     loading = false;
@@ -27,13 +30,13 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
         this.subscription = this.route.params.subscribe(params => {
             this.seriesId = +params['id']; // the + here converts a string to a number
 
-            var route = `${this.baseApiUrl}/${this.seriesId}`;
+            let route = `${this.seriesBookBaseUrl(this.seriesId)}`;
 
             this.http.get(route).subscribe((result) => {
-                var resultJson = result.json() as ResultJson;
+                let resultJson = result.json() as ResultJson;
                 if (resultJson.success) {
                     this.books = [];
-                    result.json().result.forEach((serverBook: ApiBookBaseViewModel) => {
+                    result.json().result.forEach((serverBook: IApiBookBaseViewModel) => {
                         let newData = new BookBaseViewModel(serverBook.bookId,
                             serverBook.bookDescription, serverBook.bookName,
                             serverBook.bookOrdinal);
@@ -54,7 +57,7 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
     }
 
     private getBookImageData = (book: BookBaseViewModel) => {
-        let route = `http://dwcheckapi.azurewebsites.net/Books/GetBookCover/${book.bookId}`;
+        let route = `${this.bookGetCoverUrl(book.bookId)}`;
         this.http.get(route).subscribe((result) => {
             let resultJson = result.json() as ResultJson;
             if (resultJson.success) {
@@ -66,13 +69,4 @@ export class SeriesProfileComponent implements OnInit, OnDestroy {
         });
     }
     
-}
-
-interface ApiBookBaseViewModel {
-    bookId: number;
-    bookOrdinal: number;
-    bookName: string;
-    bookCoverImage: string;
-    bookImageIsBase64String: boolean;
-    bookDescription: string;
 }
