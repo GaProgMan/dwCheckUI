@@ -26,7 +26,7 @@ export class SeriesComponent extends BaseComponent {
     hasSeries = false;
     series: Series[];
     
-    private getDwSeries: () => void;
+    getDwSeries: () => void;
     private processSeriesCallback: (response: Response, success: boolean) => void;
 
     private registerFunctions() {

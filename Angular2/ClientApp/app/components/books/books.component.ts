@@ -31,7 +31,7 @@ export class BooksComponent extends BaseComponent {
     hasBooks = false;
     books: Book[];
     
-    private getDwBook: () => void;
+    getDwBook: () => void;
     private getBookImageData: (book: Book) => void;
     
     /* callbacks */

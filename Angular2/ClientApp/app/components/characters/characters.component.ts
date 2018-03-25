@@ -28,7 +28,7 @@ export class CharacterComponent extends BaseComponent{
     hasCharacters = false;
     characters: Character[];
 
-    private getDwCharacters: () => void;
+    getDwCharacters: () => void;
     private processCharactersCallback: (response: Response, success: boolean) => void;
 
     private registerFunctions() {
