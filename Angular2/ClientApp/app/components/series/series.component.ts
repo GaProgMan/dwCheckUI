@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Http } from '@angular/http';
+import {Http, Response} from '@angular/http';
 import { ResultJson } from "../../models/ResultJson";
 import { Series } from "../../models/Series";
 import {BaseComponent} from "../base/base.component";
@@ -11,7 +11,7 @@ import {IApiSeries} from "../../interfaces/ISeries";
 })
 export class SeriesComponent extends BaseComponent {
     constructor(http: Http) {
-        super();
+        super(http);
         
         this.http = http;
 
@@ -19,37 +19,35 @@ export class SeriesComponent extends BaseComponent {
         this.loading = false;
         this.registerFunctions();
     }
-    // private vars
-    private http: Http;
-
-    // public bound vars
+    
     success: boolean;
     loading: boolean;
-    baseApiUrl: string;
     searchString = '';
     hasSeries = false;
     series: Series[];
-
-    // public functions
-    getDwSeries: () => void;
+    
+    private getDwSeries: () => void;
+    private processSeriesCallback: (response: Response, success: boolean) => void;
 
     private registerFunctions() {
+        
+        this.processSeriesCallback = (response: Response, success: boolean) =>  {
+            if(success) {
+                this.series = [];
+                response.json().result.forEach((series:IApiSeries) => {
+                    this.series.push(new Series(series.seriesId, series.seriesName, series.bookNames));
+                });
+            }
+
+            this.hasSeries = this.series && this.series.length > 0;
+            this.success = success;
+            this.loading = false;
+        };
+        
         this.getDwSeries = () => {
             let route = `${this.seriesSearchBaseUrl(this.searchString)}`;
             this.loading = true;
-            this.http.get(route).subscribe((result) => {
-                let resultJson = result.json() as ResultJson;
-                if(resultJson.success) {
-                    this.series = [];
-                    result.json().result.forEach((series:IApiSeries) => {
-                        this.series.push(new Series(series.seriesId, series.seriesName, series.bookNames));
-                    });
-                }
-                
-                this.hasSeries = this.series && this.series.length > 0;
-                this.success = resultJson.success;
-                this.loading = false;
-            });
+            this.performXhr(route, this.processSeriesCallback);
         };
     }
 }
