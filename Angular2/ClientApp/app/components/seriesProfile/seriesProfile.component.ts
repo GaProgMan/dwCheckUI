@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { Http, Response } from '@angular/http';
+
+import { IApiBook } from "../../interfaces/IApiBook";
+import { IApiBookBaseViewModel } from "../../interfaces/IApiBookSeries";
 import { BookBaseViewModel } from "../../models/Book";
 import { ImageViewModel } from "../../models/Image";
 import { BaseComponent } from "../base/base.component";
-import { IApiBookBaseViewModel } from "../../interfaces/IApiBookSeries";
-import { IApiBook } from "../../interfaces/IApiBook";
 
 @Component({
     selector: 'seriesProfile',
@@ -13,7 +14,7 @@ import { IApiBook } from "../../interfaces/IApiBook";
 })
 
 export class SeriesProfileComponent extends BaseComponent implements OnInit, OnDestroy {
-    constructor(private route: ActivatedRoute, http: Http) {
+    constructor(private route: ActivatedRoute, http: HttpClient) {
         super(http);
         
         this.registerFunctions();
@@ -26,9 +27,9 @@ export class SeriesProfileComponent extends BaseComponent implements OnInit, OnD
     books: BookBaseViewModel[];
     
     private subscription: any;
-    private getBooksCallback: (response: Response, success: boolean) => void;
+    private getBooksCallback: (response: HttpResponse<any>, success: boolean) => void;
     private getBookImageData: (book: BookBaseViewModel) => void;
-    private getBookImageDataCallback: (response: Response, success: boolean) => void;
+    private getBookImageDataCallback: (response: HttpResponse<any>, success: boolean) => void;
 
     ngOnInit() {
         this.subscription = this.route.params.subscribe(params => {
@@ -44,10 +45,10 @@ export class SeriesProfileComponent extends BaseComponent implements OnInit, OnD
     
     private registerFunctions = () => {
         
-        this.getBooksCallback = (response: Response, success: boolean) => {
+        this.getBooksCallback = (response: HttpResponse<any>, success: boolean) => {
             if (success) {
                 this.books = [];
-                response.json().result.forEach((serverBook: IApiBookBaseViewModel) => {
+                (response.body as any[]).forEach((serverBook: IApiBookBaseViewModel) => {
                     let newData = new BookBaseViewModel(serverBook.bookId,
                         serverBook.bookDescription, serverBook.bookName,
                         serverBook.bookOrdinal);
@@ -61,9 +62,9 @@ export class SeriesProfileComponent extends BaseComponent implements OnInit, OnD
             this.loading = false;
         };
         
-        this.getBookImageDataCallback =(response: Response, success:boolean) => {
+        this.getBookImageDataCallback =(response: HttpResponse<any>, success:boolean) => {
             if (success) {
-                let serverData = response.json().result as IApiBook;
+                let serverData = response.body as IApiBook;
                 let book = this.books.find(b => b.bookId == serverData.bookId);
                 if (!book) {
                     throw new Error(`Couldn't find book with id of ${serverData.bookId}`);

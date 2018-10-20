@@ -11,7 +11,7 @@ import {BaseComponent} from "../base/base.component";
     templateUrl: './characters.component.html'
 })
 export class CharacterComponent extends BaseComponent{
-    constructor(private http: HttpClient) {
+    constructor(http: HttpClient) {
         super(http);
 
         this.success = true;

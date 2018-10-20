@@ -1,9 +1,10 @@
-﻿import {Component, OnInit, OnDestroy, Inject} from '@angular/core';
+﻿import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import {Http, Response} from '@angular/http';
-import { ResultJson } from "../../models/ResultJson";
+
 import { Book } from "../../models/Book";
-import { ImageViewModel} from "../../models/Image";
+import { ImageViewModel } from "../../models/Image";
+import { ResultJson } from "../../models/ResultJson";
 import { BaseComponent } from "../base/base.component";
 
 @Component({
@@ -12,7 +13,7 @@ import { BaseComponent } from "../base/base.component";
 })
 
 export class BookProfileComponent extends BaseComponent implements OnInit, OnDestroy {
-    constructor(private route: ActivatedRoute, http: Http) {
+    constructor(private route: ActivatedRoute, http: HttpClient) {
         super(http);
         
         this.registerFunctions();
@@ -28,8 +29,8 @@ export class BookProfileComponent extends BaseComponent implements OnInit, OnDes
     private getBookImageData: () => void;
     
     // callbacks
-    private processBookCallback: (resultJson: Response, success: boolean) => void;
-    private processBookArtResponseCallback: (result: Response) => void;
+    private processBookCallback: (resultJson: HttpResponse<any>, success: boolean) => void;
+    private processBookArtResponseCallback: (result: HttpResponse<any>, success: boolean) => void;
     
     ngOnInit() {
         this.subscription = this.route.params.subscribe(params =>  {
@@ -47,9 +48,9 @@ export class BookProfileComponent extends BaseComponent implements OnInit, OnDes
     }
     
     registerFunctions = () => {
-        this.processBookCallback =  (resultJson: Response, success: boolean) => {
+        this.processBookCallback =  (result: HttpResponse<any>, success: boolean) => {
             if (success) {
-                let serverBook = resultJson.json().result;
+                let serverBook = result.body;
                 this.book = new Book(serverBook.bookId,
                     serverBook.bookOrdinal, serverBook.bookName,
                     serverBook.bookIsbn10, serverBook.bookIsbn13,
@@ -63,8 +64,8 @@ export class BookProfileComponent extends BaseComponent implements OnInit, OnDes
             this.loading = false;
         };
         
-        this.processBookArtResponseCallback = (result: Response) => {
-            let serverData = result.json().result;
+        this.processBookArtResponseCallback = (result: HttpResponse<any>, success: boolean) => {
+            let serverData = result.body;
             this.book.coverData = new ImageViewModel(
                 serverData.bookCoverImage, serverData.bookImageIsBase64String
             );
