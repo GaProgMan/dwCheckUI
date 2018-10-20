@@ -1,13 +1,11 @@
-﻿import {Http, Response} from "@angular/http";
+﻿import {HttpClient, HttpResponse} from "@angular/common/http";
+
 import {ResultJson} from "../../models/ResultJson";
 
 export class BaseComponent {
-    constructor(http: Http) {
-        this.http = http;
-    }
+    constructor(protected http: HttpClient) { }
     
-    private apiIsrunning: boolean;
-    http: Http;
+    private apiIsrunning: boolean = false;
 
     private apiBaseUrl = () :string => {
         return `${window.location.protocol}//dwcheckapi.azurewebsites.net/`;
@@ -50,11 +48,10 @@ export class BaseComponent {
         }
     };
     
-    performXhr = (route: string, successCallback: (response: Response, success: boolean) => void) => {
-        this.http.get(route).subscribe((result: Response) => {
-            let resultJson = result.json() as ResultJson;
-            if (resultJson.success) {
-                successCallback(result, resultJson.success);
+    performXhr = (route: string, successCallback: (response: HttpResponse<any>, success: boolean) => void) => {
+        this.http.get(route, {observe: 'response'}).subscribe((response: HttpResponse<any>) => {
+            if (response.ok) {
+                successCallback(response, response.ok);
             }
             
         });

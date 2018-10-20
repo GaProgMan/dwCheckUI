@@ -1,17 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
-import { AppComponent } from './components/app/app.component';
-import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { AboutComponent } from './components/about/about.component';
-import { BooksComponent } from './components/books/books.component';
-import { CharacterComponent} from "./components/characters/characters.component";
-import { SeriesComponent } from "./components/series/series.component";
+import { AppComponent } from './components/app/app.component';
 import { BookProfileComponent } from "./components/bookProfile/bookProfile.component";
-import { SeriesProfileComponent} from "./components/seriesProfile/seriesProfile.component";
+import { BooksComponent } from './components/books/books.component';
+import { CharacterComponent } from "./components/characters/characters.component";
+import { NavMenuComponent } from './components/navmenu/navmenu.component';
+import { SeriesComponent } from "./components/series/series.component";
+import { SeriesProfileComponent } from "./components/seriesProfile/seriesProfile.component";
 
 @NgModule({
     declarations: [
@@ -26,7 +26,7 @@ import { SeriesProfileComponent} from "./components/seriesProfile/seriesProfile.
     ],
     imports: [
         CommonModule,
-        HttpModule,
+        HttpClientModule,
         FormsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'about', pathMatch: 'full' },
