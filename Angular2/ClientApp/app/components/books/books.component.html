@@ -11,7 +11,7 @@
     <p>Searching, please wait</p>
 </div>
 
-<div class="table-responsive" *ngIf="!loading && success && hasBooks">
+<div class="table-responsive" *ngIf="!loading && success && books.value.length > 0">
     <table class='table'>
         <thead>
         <tr>
@@ -21,12 +21,12 @@
             <th>ISBN 13</th>
             <th>Description</th>
             
-            <th *ngIf="displayCharacters">Characters</th>
-            <th *ngIf="displaySeries">Series</th>
+            <!-- <th *ngIf="displayCharacters">Characters</th>
+            <th *ngIf="displaySeries">Series</th> -->
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let book of books">
+        <tr *ngFor="let book of books | async">
             <td colspan="2">
                 <img src="{{ book.imageTag() }}" class="img-responsive"/>
             </td>
