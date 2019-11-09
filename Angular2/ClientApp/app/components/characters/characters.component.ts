@@ -1,19 +1,18 @@
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import { Component } from '@angular/core';
-import {Http, Response} from '@angular/http';
-import { ResultJson } from "../../models/ResultJson";
-import { Character } from "../../models/Character";
-import {BaseComponent} from "../base/base.component";
+
 import {IApiCharacter} from "../../interfaces/ICharacter";
+import { Character } from "../../models/Character";
+import { ResultJson } from "../../models/ResultJson";
+import {BaseComponent} from "../base/base.component";
 
 @Component({
     selector: 'characters',
     templateUrl: './characters.component.html'
 })
 export class CharacterComponent extends BaseComponent{
-    constructor(http: Http) {
+    constructor(http: HttpClient) {
         super(http);
-        
-        this.http = http;
 
         this.success = true;
         this.loading = false;
@@ -29,13 +28,13 @@ export class CharacterComponent extends BaseComponent{
     characters: Character[];
 
     getDwCharacters: () => void;
-    private processCharactersCallback: (response: Response, success: boolean) => void;
+    private processCharactersCallback: (response: HttpResponse<any>, success: boolean) => void;
 
     private registerFunctions() {
-        this.processCharactersCallback = (response: Response, success: boolean) => {
+        this.processCharactersCallback = (response: HttpResponse<any>, success: boolean) => {
             if(success) {
                 this.characters = [];
-                response.json().result.forEach((character:IApiCharacter) => {
+                (response.body as any[]).forEach((character:IApiCharacter) => {
                     this.characters.push(new Character(character.characterName, character.books));
                 });
             }
@@ -52,4 +51,3 @@ export class CharacterComponent extends BaseComponent{
         };
     }
 }
-
